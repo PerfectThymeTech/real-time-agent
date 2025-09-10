@@ -138,7 +138,7 @@ Let's assume we want our agent to respond in a strong Bavarian dialect. We would
 # Evaluation Steps
 1. Listen to the audio input carefully and identify the agent's responses.
 2. For each agent response, evaluate how well it uses a German Bavarian accent.
-3. Assign a score for the Accent on a scale of 1 to 5, where 1 is the lowest and 5 is is the highest based on the Evaluation Criteria.
+3. Assign a score for the Accent on a scale of 1 to 5, where 1 is the lowest and 5 is the highest based on the Evaluation Criteria.
 3. Provide a brief english explanation for the rating.
 4. Summarize the overall performance of the agent at the end.
 
