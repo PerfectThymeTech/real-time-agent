@@ -56,7 +56,7 @@ N. <nth step>
 
 The following steps are part of the automated evaluation workflow:
 
-1. **Define Model endpoint**: Define the model endpoint to be used for the evaluation. We are recommending to rely on the latest `gpt-realtime` model from Open AI for these evaluations.
+1. **Define Model endpoint**: Define the model endpoint to be used for the evaluation. We are recommending to rely on the latest `gpt-realtime` model from OpenAI for these evaluations.
 
 2. **Open Real-Time Audio Session**: Establish a real-time audio session with the AI agent to facilitate live interactions and recordings. Provide the G-Eval prompt as an instruction to the agent. Turn off voice activity detection (VAD) to ensure the agent does not start speaking prematurely.
 
@@ -139,8 +139,8 @@ Let's assume we want our agent to respond in a strong Bavarian dialect. We would
 1. Listen to the audio input carefully and identify the agent's responses.
 2. For each agent response, evaluate how well it uses a German Bavarian accent.
 3. Assign a score for the Accent on a scale of 1 to 5, where 1 is the lowest and 5 is the highest based on the Evaluation Criteria.
-3. Provide a brief English explanation for the rating.
-4. Summarize the overall performance of the agent at the end.
+4. Provide a brief english explanation for the rating.
+5. Summarize the overall performance of the agent at the end.
 
 # Evaluation Form (scores ONLY):
 - Accent (1-5): <score> - <brief explanation>
