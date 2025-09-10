@@ -4,7 +4,7 @@ This document provides an overview of how to define AI agents using a declarativ
 
 This also acknowledges the requirement for organizations to manage agents at scale, allowing for consistent configurations and easier updates across multiple agents without having to modify code directly for every minor change or update.
 
-![Declarative Agent Definitions Diagram](/docs/images/declaritive-agents.png)
+![Declarative Agent Definitions Diagram](/docs/images/declarative-agents.png)
 
 ## Declarative Configuration
 
