@@ -2,7 +2,7 @@
 
 This document outlines the use of LLM-as-a-judge to evaluate and improve the performance of real-time AI agents built using Azure OpenAI or AI Foundry. Compared to other standard agent scenarios where all interactions are text-based, real-time agents often involve multi-modal inputs and outputs, such as voice and images, and require low-latency responses. This document describes a novel approach to adapting the LLM-as-a-judge approach to real-time audio interactions.
 
-## Challenges in audio-based Evaluations
+## Challenges in Audio-Based Evaluations
 
 Evaluating audio-based interactions is complex and cumbersome due to several factors:
 
