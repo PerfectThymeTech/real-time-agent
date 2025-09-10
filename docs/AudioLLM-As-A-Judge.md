@@ -88,7 +88,7 @@ For the second data sample, we instructed the agent to respond with a Berlin Ger
 Your browser does not support the audio tag.
 </audio>
 
-The audio sample shows a strong Berlin accent which notably very distinct from the Bavarian dialect.
+The audio sample shows a strong Berlin accent which is notably very distinct from the Bavarian dialect.
 
 ### G-Eval Prompt
 
