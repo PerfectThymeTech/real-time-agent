@@ -115,8 +115,8 @@ class RealTimeAgent:
             
             # Handle streaming vs non-streaming responses
             if self.config.streaming:
-                # Return the async generator directly for streaming
-                return self._handle_streaming_response(response)
+                # Return a wrapper that ensures conversation history is updated
+                return self._streaming_response_wrapper(response)
             else:
                 # Handle single response
                 return await self._handle_single_response(response)
@@ -128,28 +128,33 @@ class RealTimeAgent:
                 await self.event_handler.on_error(e)
             raise
     
-    async def _handle_streaming_response(
+    async def _streaming_response_wrapper(
         self, 
         response_stream: AsyncIterator[AgentResponse]
     ) -> AsyncIterator[AgentResponse]:
-        """Handle streaming responses from the provider."""
+        """Wrapper that ensures conversation history is updated for streaming responses."""
         accumulated_content = ""
         message_id = str(uuid.uuid4())
         
         async for chunk in response_stream:
-            accumulated_content += chunk.message.content
+            # Extract content from this chunk
+            chunk_content = chunk.message.content
             
-            # Update message with accumulated content
+            # Update accumulated content
+            if chunk.message.metadata and 'accumulated_content' in chunk.message.metadata:
+                accumulated_content = chunk.message.metadata['accumulated_content']
+            else:
+                accumulated_content += chunk_content
+            
+            # Update chunk message ID to be consistent
             chunk.message.id = message_id
             chunk.message.timestamp = datetime.now()
             
-            # Notify event handler
+            # Notify event handler of the chunk
             if self.event_handler:
                 await self.event_handler.on_message(chunk.message)
             
-            yield chunk
-            
-            # If this is the final chunk, add to conversation history
+            # If this is the final chunk, immediately add to conversation history BEFORE yielding
             if chunk.is_final:
                 final_message = Message(
                     id=message_id,
@@ -159,6 +164,12 @@ class RealTimeAgent:
                     metadata=chunk.message.metadata
                 )
                 self.conversation_history.append(final_message)
+                self.logger.debug(f"Added final message to history. New length: {len(self.conversation_history)}")
+            
+            yield chunk
+            
+            if chunk.is_final:
+                break
     
     async def _handle_single_response(self, response: AgentResponse) -> AgentResponse:
         """Handle single (non-streaming) responses from the provider."""
