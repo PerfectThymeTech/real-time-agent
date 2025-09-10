@@ -7,7 +7,7 @@ This document provides an overview of the Azure architecture for building real-t
 ## Key Components
 
 - **AI Foundry**: AI Foundry will be used to host the real-time models and manage the interactions between the client and the application backend.
-- **Azure Container Apps / Azure Kubernetes Service (AKS)**: The application backend as well as the required MCP servers will be hosted on a contaner runtime in Azure. For reduced management overhead we consider the usage of Azure Container Apps. Alternatively, we will rely on AKS, providing a scalable and managed environment for running the backend services.
+- **Azure Container Apps / Azure Kubernetes Service (AKS)**: The application backend as well as the required MCP servers will be hosted on a container runtime in Azure. For reduced management overhead we consider the usage of Azure Container Apps. Alternatively, we will rely on AKS, providing a scalable and managed environment for running the backend services.
 - **Azure Cosmos DB**: A globally distributed, multi-model database service will be used to store session states, and other relevant data.
 
 ## Observability
