@@ -79,7 +79,7 @@ For the first data sample, we instructed the agent to respond with a Bavarian Ge
 Your browser does not support the audio tag.
 </audio>
 
-The audio sample shows a strong Bavarian accent which notably is not perfect. Some words are are closer to standard German.
+The audio sample shows a strong Bavarian accent which notably is not perfect. Some words are closer to standard German.
 
 **Berlin Audio Sample**
 For the second data sample, we instructed the agent to respond with a Berlin German dialect. This resulted in the following audio sample:
