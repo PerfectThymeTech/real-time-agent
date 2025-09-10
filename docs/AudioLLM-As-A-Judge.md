@@ -75,14 +75,14 @@ Before we started the tests, we generated a few audio samples using a custom app
 **Bavarian Audio Sample**
 For the first data sample, we instructed the agent to respond with a Bavarian German dialect. This resulted in the following audio sample:
 
-[bayrisch_strong_accent.wav](https://github.com/PerfectThymeTech/real-time-agent/raw/refs/heads/main/docs/audio/bayrisch_strong_accent.wav)
+[Bavarian Audio Sample](https://github.com/PerfectThymeTech/real-time-agent/raw/refs/heads/main/docs/audio/bayrisch_strong_accent.wav)
 
 The audio sample shows a strong Bavarian accent which notably is not perfect. Some words are closer to standard German.
 
 **Berlin Audio Sample**
 For the second data sample, we instructed the agent to respond with a Berlin German dialect. This resulted in the following audio sample:
 
-https://github.com/PerfectThymeTech/real-time-agent/raw/refs/heads/main/docs/audio/berlinerisch_strong_accent.wav
+[Berlin Audio Sample](https://github.com/PerfectThymeTech/real-time-agent/raw/refs/heads/main/docs/audio/berlinerisch_strong_accent.wav)
 
 The audio sample shows a strong Berlin accent which is notably very distinct from the Bavarian dialect.
 
