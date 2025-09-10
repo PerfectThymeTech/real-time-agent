@@ -20,7 +20,7 @@ This document provides an overview of the conceptual architecture for building r
 1. When using Web RTC, the client establishes a connection with the backend to fetch an ephemeral token for authentication.
 2. The client establishes a direct connection with the AI Foundry or Azure OpenAI service using the token over the Web RTC or SIP API interface.
 3.  The API triggers the Webhook API which then sends a webhook to the application backend webhook URL to notify the backend of the new session.
-4. The application backend initializes a WebSocket connection with the the Realtime API which will be active throughout the session.
+4. The application backend initializes a WebSocket connection with the Realtime API which will be active throughout the session.
 5. The client sends multi-modal inputs (text, voice, images) to the AI Foundry or Azure OpenAI service.
 6. The AI Foundry or Azure OpenAI service processes the inputs and generates real-time streaming responses. It also informs the backend of the real-time events via the WebSocket connection.
 7. The application backend manages the agent's state and handles any tool calls or function calls using the MCP protocol. The application backend can also send messages to the AI Foundry or Azure OpenAI service via the WebSocket connection to provide results from the tool calls or function calls.
