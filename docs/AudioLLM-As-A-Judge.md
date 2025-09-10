@@ -56,7 +56,7 @@ N. <nth step>
 
 The following steps are part of the automated evaluation workflow:
 
-1. **Define Model endpoint**: Define the model endpoint to be used for the evaluation. We are recommending to rely on the latest `gpt-realtime` model from Open AI for these evaluations.
+1. **Define Model endpoint**: Define the model endpoint to be used for the evaluation. We are recommending to rely on the latest `gpt-realtime` model from OpenAI for these evaluations.
 
 2. **Open Real-Time Audio Session**: Establish a real-time audio session with the AI agent to facilitate live interactions and recordings. Provide the G-Eval prompt as an instruction to the agent. Turn off voice activity detection (VAD) to ensure the agent does not start speaking prematurely.
 
