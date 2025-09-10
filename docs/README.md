@@ -6,4 +6,4 @@ Comprehensive documentation is available to help you get started and make the mo
 
 1. [Conceptual Architecture](/docs/ConceptualArchitecture.md)
 2. [Azure Architecture](/docs/AzureArchitecture.md)
-3. [Declarative Agents](/docs/DelarativeAgents.md)
+3. [Declarative Agents](/docs/DeclarativeAgents.md)
