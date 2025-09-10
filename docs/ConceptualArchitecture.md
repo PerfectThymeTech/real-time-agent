@@ -9,11 +9,11 @@ This document provides an overview of the conceptual architecture for building r
 1. **Client**: The front-end application that interacts with users, capturing multi-modal inputs (text, voice, images) and displaying real-time streaming responses.
 2. **AI Foundry / Azure OpenAI**: The core AI service that processes inputs and generates responses using advanced real-time language models.
 3. **Application Backend**: The backend service that manages agent definitions, configurations, and states. It also defines the business logic for MCP tool calling and function calls to keep the logic private and client-agnostic while ensuring low latency.
-5. **Session State Management**: Manages the state of each user session, ensuring continuity and context for multi-turn conversations across sessions.
-6. **MCP Server**: Model context protocol is used as the default protocol for tool calling and function call scenarios. It allows the agent to interact with external tools and services in a structured and consistent and resilient manner.
-7. **Observability Framework**: Provides logging, monitoring, and tracing capabilities to ensure system reliability and performance across all agents.
-8. **Testing**: A comprehensive testing framework to validate the functionality, performance, and reliability of the agents in various scenarios (text and audio-based evaluations).
-9. **Security and Compliance**: Ensures data handling best practices are followed by default, including encryption, access controls, and compliance with relevant regulations.
+4. **Session State Management**: Manages the state of each user session, ensuring continuity and context for multi-turn conversations across sessions.
+5. **MCP Server**: Model context protocol is used as the default protocol for tool calling and function call scenarios. It allows the agent to interact with external tools and services in a structured and consistent and resilient manner.
+6. **Observability Framework**: Provides logging, monitoring, and tracing capabilities to ensure system reliability and performance across all agents.
+7. **Testing**: A comprehensive testing framework to validate the functionality, performance, and reliability of the agents in various scenarios (text and audio-based evaluations).
+8. **Security and Compliance**: Ensures data handling best practices are followed by default, including encryption, access controls, and compliance with relevant regulations.
 
 ## Flow of Interactions
 
