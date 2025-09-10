@@ -66,11 +66,11 @@ The following steps are part of the automated evaluation workflow:
 
 ## Test
 
-In our tests, we asked our LLM-as-a-judge to evaluate how well the provided audio samples adhere to a specific dialect (e.g., British English, American English, Australian English). 
+In our tests, we asked our LLM-as-a-judge to evaluate how well the provided audio samples adhere to a specific dialect (e.g., British English, American English, Australian English).
 
 ### Generated Audio Samples
 
-Before we started the tests, we generated a few audio samples using a custom application. Throughout the conversation, we recorded the audio output of the agent. 
+Before we started the tests, we generated a few audio samples using a custom application. Throughout the conversation, we recorded the audio output of the agent.
 
 **Bavarian Audio Sample**
 For the first data sample, we instructed the agent to respond with a Bavarian German dialect. This resulted in the following audio sample:
