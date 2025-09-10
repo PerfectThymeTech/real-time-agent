@@ -7,7 +7,7 @@ This document provides an overview of the Azure architecture for building real-t
 ## Key Components
 
 - **AI Foundry**: AI Foundry will be used to host the real-time models and manage the interactions between the client and the application backend.
-- **Azure Container Apps / Azure Kubernetes Service (AKS)**: The application backend as well as the required MCP servers will be hosted on a contaner runtime in Azure. For reduced management overhead we consider the usage of Azure Container Apps. Alternatively, we will rely on AKS, providing a scalable and managed environment for running the backend services.
+- **Azure Container Apps / Azure Kubernetes Service (AKS)**: The application backend as well as the required MCP servers will be hosted on a container runtime in Azure. For reduced management overhead we consider the usage of Azure Container Apps. Alternatively, we will rely on AKS, providing a scalable and managed environment for running the backend services.
 - **Azure Cosmos DB**: A globally distributed, multi-model database service will be used to store session states, and other relevant data.
 
 ## Observability
@@ -27,5 +27,5 @@ Comprehensive tests will be implemented to validate the functionality, performan
 The application backend will be implemented using Python and FastAPI, providing a high-performance and scalable framework for building the backend services. The backend will manage agent definitions, configurations, and states, as well as handle business logic for MCP tool calling and function calls. We are considering different candidates for the integration with AI Foundry or Azure OpenAI. The following frameworks are currently under evaluation:
 
 - **Open AI SDK**: The Open AI SDK provides low-level access to the underlying components, allowing for greater control and customization of the implementation. This approach offers more flexibility in terms of adapting to specific requirements and use cases. However, it also means that we will need to handle more of the implementation details ourselves, which may increase development time and complexity. Updates are usually faster compared to the Open AI Agents SDK.
-- **Open AI Agents SDK**: The Open AI Agents SDK provides a higher-level abstraction over basic componentswhich simplifies the development of AI agents. However, this also means that we have less control over the underlying implementation and may face limitations in terms of customization and flexibility. Also, in case of new features, we may need to wait for updates to the SDK before we can take advantage of them. Updates are usually slower compared to the Open AI SDK.
+- **Open AI Agents SDK**: The Open AI Agents SDK provides a higher-level abstraction over basic components which simplifies the development of AI agents. However, this also means that we have less control over the underlying implementation and may face limitations in terms of customization and flexibility. Also, in case of new features, we may need to wait for updates to the SDK before we can take advantage of them. Updates are usually slower compared to the Open AI SDK.
 - **Agents Framework**: tbd
