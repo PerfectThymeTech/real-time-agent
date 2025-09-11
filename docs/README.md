@@ -4,7 +4,12 @@ Comprehensive documentation is available to help you get started and make the mo
 
 ## Table of Contents
 
+### Architecture and Design
+
 1. [Conceptual Architecture](/docs/ConceptualArchitecture.md)
 2. [Azure Architecture](/docs/AzureArchitecture.md)
 3. [Declarative Agents](/docs/DeclarativeAgents.md)
-4. [Audio-based LLM-as-a-Judge](/docs/AudioLLM-As-A-Judge.md)
+
+### Testing
+
+1. [Audio-based LLM-as-a-Judge](/docs/AudioLLM-As-A-Judge.md)

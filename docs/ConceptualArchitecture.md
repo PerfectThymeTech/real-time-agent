@@ -7,7 +7,7 @@ This document provides an overview of the conceptual architecture for building r
 ## Key Components
 
 1. **Client**: The front-end application that interacts with users, capturing multi-modal inputs (text, voice, images) and displaying real-time streaming responses.
-2. **AI Foundry / Azure OpenAI**: The core AI service that processes inputs and generates responses using advanced real-time language models.
+2. **AI Foundry / Azure OpenAI / Real-time model**: The core AI service that processes inputs and generates responses using advanced real-time language models.
 3. **Application Backend**: The backend service that manages agent definitions, configurations, and states. It also defines the business logic for MCP tool calling and function calls to keep the logic private and client-agnostic while ensuring low latency.
 4. **Session State Management**: Manages the state of each user session, ensuring continuity and context for multi-turn conversations across sessions.
 5. **MCP Server**: Model context protocol is used as the default protocol for tool calling and function call scenarios. It allows the agent to interact with external tools and services in a structured and consistent and resilient manner.
@@ -27,3 +27,9 @@ This document provides an overview of the conceptual architecture for building r
 8. The client receives and displays the real-time streaming responses to the user.
 9. The observability framework captures logs, metrics, and traces throughout the interaction to monitor performance and reliability in real-time based on LLM-as-a-judge metrics.
 10. The session state management component ensures continuity and context for multi-turn conversations across sessions.
+
+## Real-time model
+
+We want to build the solution in a way that allows us to easily swap out the real-time model provider, whether it's Azure OpenAI, AI Foundry, or any other service that supports real-time streaming and multi-modal capabilities. This abstraction layer will ensure that our architecture remains flexible and adaptable to future advancements in AI technology.
+
+Due to the fact that only few model providers currently support real-time audio streaming and multi-modal capabilities, we will initially focus on integrating with Azure OpenAI and AI Foundry. However, in the architecture design we want to accommodate additional providers as they become available, ensuring that we can leverage the best available technology for our use cases.

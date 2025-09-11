@@ -109,6 +109,12 @@ agent:
       condition: "user_intent == 'TechnicalIssue'"
 ```
 
+### Domain-Specific Language (DSL) for Agents and Workflows
+
+We are also exploring the development of a Domain-Specific Language (DSL) to simplify the creation and management of agents and their workflows. This DSL would provide a higher-level abstraction for defining agents, making it easier for non-technical users to create and modify agent configurations without having to deal with complex JSON or YAML structures.
+
+The DSL would compile down to the declarative configuration format, ensuring compatibility with existing systems while providing a more user-friendly interface for defining agents and their behaviors.
+
 ## Agent Map
 
 The declarative configurations are stored in a central repository or database, allowing for easy access and management. The agents are loaded dynamically at runtime.
@@ -116,3 +122,11 @@ The declarative configurations are stored in a central repository or database, a
 Internally, the agent definitions are parsed and converted into executable agents using a framework like the OpenAI Agents SDK. When loaded, these communities and agents form a directed cyclic graph where nodes represent agents and edges represent possible transitions between agents based on user queries.
 
 An agent map is maintained to keep track of all defined agents, their communities, tasks, and available tools. This map helps in routing user queries to the appropriate agent based on the task and community.
+
+## Visualization of Agent Map
+
+We acknowledge the importance of visualizing the agent map to understand the relationships and interactions between different agents and communities. A graphical representation of the agent map can help in identifying potential bottlenecks, optimizing agent interactions, and ensuring that the overall system is functioning as intended.
+
+Therefore, we want to implement a visualization tool that can generate diagrams of the agent map based on the declarative configurations. This tool would provide insights into the structure and flow of the agent system, making it easier to manage and optimize.
+
+In addition, these visualizations can be used for documentation purposes, helping stakeholders understand the architecture and design of the agent system. It can also be shared with business stakeholders to demonstrate how different agents collaborate to achieve business goals. This will simplify the collaboration between technical and non-technical team members, ensuring that everyone is aligned on the agent system's capabilities and functionalities as well as the orchestration of agents to achieve complex tasks.
