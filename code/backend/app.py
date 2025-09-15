@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
-from fastapi import FastAPI
 
-from core.settings import settings
 from api.v1.api_v1 import api_v1_router
+from core.settings import settings
+from fastapi import FastAPI
 from utils import setup_opentelemetry
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:

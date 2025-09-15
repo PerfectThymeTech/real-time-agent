@@ -2,15 +2,15 @@ import base64
 from hashlib import sha256
 from typing import Annotated
 
-from fastapi import Header, HTTPException
 from core.settings import settings
+from fastapi import Header, HTTPException
 from utils import setup_logging
 
 logger = setup_logging(__name__)
 
 
 async def verify_health_auth_header(
-    x_ms_auth_internal_token: Annotated[str | None, Header()] = None
+    x_ms_auth_internal_token: Annotated[str | None, Header()] = None,
 ) -> bool:
     """Returns true if SHA256 of header_value matches WEBSITE_AUTH_ENCRYPTION_KEY.
     This only works on Windows-based app services. Therefore, this feature is turned off for other OS types.

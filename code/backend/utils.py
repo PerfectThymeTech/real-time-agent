@@ -1,6 +1,5 @@
 import logging
 from logging import Logger
-from opentelemetry import trace
 
 from azure.monitor.opentelemetry.exporter import (
     ApplicationInsightsSampler,
@@ -9,6 +8,7 @@ from azure.monitor.opentelemetry.exporter import (
     AzureMonitorTraceExporter,
 )
 from core.settings import settings
+from fastapi import FastAPI
 from opentelemetry import trace
 from opentelemetry._logs import set_logger_provider
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -23,7 +23,6 @@ from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.trace import Tracer, set_tracer_provider
-from fastapi import FastAPI
 
 
 def setup_logging(module) -> Logger:
@@ -59,8 +58,6 @@ def setup_opentelemetry(app: FastAPI):
     RETURNS (None): Nothing is being returned.
     """
     # Configure basic logging configuration
-    
-    # Create stream handler
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(
         logging.Formatter("[%(asctime)s] [%(levelname)s] [%(module)-8.8s] %(message)s")
