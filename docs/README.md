@@ -13,4 +13,4 @@ Comprehensive documentation is available to help you get started and make the mo
 ### Testing
 
 1. [Audio-based LLM-as-a-Judge - Approach](/docs/AudioLLM-As-A-Judge-Approach.md)
-2. [Audio-based LLM-as-a-Judge - Evaluation Results](/docs/AudioLLM-As-A-Judge-Evaluation-Results)
+2. [Audio-based LLM-as-a-Judge - Evaluation Results](/docs/AudioLLM-As-A-Judge-Evaluation-Results.md)
