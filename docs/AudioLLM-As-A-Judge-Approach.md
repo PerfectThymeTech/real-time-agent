@@ -178,6 +178,6 @@ We are considering the following next steps to further enhance the evaluation pr
 
 1. **Expansion of test data**: We plan to expand the test data used for the evaluations to get a better sample population which we can use for benchmarking. Additional data samples will also help to identify edge cases and improve the robustness of the evaluation process.
 
-1. **Classification of accents, dialects, and emotions**: We want to simplify the evaluation setup and want to identify how well the LLM-as-a-judge can classify different accents and dialects, as well as detect emotional cues in speech.
+2. **Classification of accents, dialects, and emotions**: We want to simplify the evaluation setup and want to identify how well the LLM-as-a-judge can classify different accents and dialects, as well as detect emotional cues in speech.
 
-2. **Inclusion of user audio in recordings**: We aim to evaluate how well the agent is able to use the Chain-of-Thought prompting with user audio inputs. We want to understand whether it is able to focus on specific turns in the provided audio sample ignoring user queries.
+3. **Inclusion of user audio in recordings**: We aim to evaluate how well the agent is able to use the Chain-of-Thought prompting with user audio inputs. We want to understand whether it is able to focus on specific turns in the provided audio sample ignoring user queries.
