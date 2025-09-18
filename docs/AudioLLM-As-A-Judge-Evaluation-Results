@@ -23,9 +23,9 @@ We used the following prompt for the language identification task:
 5. Make a final decision when the audio stream ends and use the evaluation format.
 
 # Evaluation Format:
-- Language: <predicted language>  
+- Language: <predicted language>
 - Confidence score: <score between 0 and 5>
-- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>  
+- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>
 ```
 
 ### Results Summary
@@ -71,9 +71,9 @@ We used the following prompt for the accent detection task:
 5. Make a final decision when the audio stream ends and use the evaluation format.
 
 # Evaluation Format:
-- Accent: <predicted accent>  
+- Accent: <predicted accent>
 - Confidence score: <score between 0 and 5>
-- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>  
+- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>
 - Alternatives: <accent 1>, <accent 2>
 ```
 
@@ -125,9 +125,9 @@ We used the following prompt for the emotion detection task:
 5. Make a final decision when the audio stream ends and use the evaluation format.
 
 # Evaluation Format:
-- Emotion: <predicted emotion>  
+- Emotion: <predicted emotion>
 - Confidence score: <score between 0 and 5>
-- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>  
+- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>
 - Alternatives: <emotion 1>, <emotion 2>
 ```
 
