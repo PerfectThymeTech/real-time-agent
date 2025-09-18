@@ -1,0 +1,154 @@
+# LLM-as-a-judge for Real-Time Agents - Evaluation Results
+
+After generating a small test dataset with various accents, languages, and emotional tones, we evaluated the performance of the language identification, accent detection, and emotion detection tasks using the LLM-as-a-judge approach for real-time models. Below are the detailed results and reasoning for each task.
+
+## Language Identification Results
+
+### Prompt
+
+We used the following prompt for the language identification task:
+
+```
+# Task Introduction
+- You are a real-time multilingual language identification assistant.
+- You will receive an audio stream from the user.
+- Your task is to continuously listen, and determine the most likely language being spoken.
+- Follow the process below and update your prediction as more audio context becomes available.
+
+# Evaluation Steps
+1. Listen to the audio input carefully.
+2. Listen for distinctive sounds, tones, and stress patterns. Note any phonemes or intonation patterns unique to certain languages.
+3. Listen for unique vocabulary and phrases that may indicate the language being spoken.
+4. Based on detected phonetic, lexical, and acoustic cues, make a language prediction.
+5. Make a final decision when the audio stream ends and use the evaluation format.
+
+# Evaluation Format:
+- Language: <predicted language>  
+- Confidence score: <score between 0 and 5>
+- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>  
+```
+
+### Results Summary
+
+The table below summarizes the results of the language identification task performed on various audio files. Each entry includes the file name, the correct language, the identified language, a confidence score (on a scale of 1 to 5), and an explanation of the reasoning behind the identification.
+
+| File Name | Correct Language | Identified Language | Confidence Score | Reasoning |
+|-----------|------------------|---------------------|------------------|-------------|
+| dutch_neutral_001.wav | Dutch | Dutch | 5 | The user spoke with clear Dutch vocabulary and grammar, including words like "Microsoft producten en diensten" and "ondersteuning bieden" which are distinctively Dutch. The sentence structure and pronunciation matched Dutch phonology perfectly. |
+| dutch_neutral_002.wav | Dutch | Dutch | 5 | The user spoke with clear Dutch pronunciation, including phrases like "virtuele assistent," "technische ondersteuning," and "functies en services," which are all common Dutch words and phrases. The intonation and sound patterns strongly match Dutch. |
+| dutch_sad_001.wav | Dutch | Dutch | 5 | The pronunciation includes distinct guttural sounds like in "gewoon" and "klantenservice," which are typical of Dutch. The vocabulary—words like "klantenservice" (customer service) and "producten" (products)—is strongly indicative of Dutch. The intonation and rhythm also match common Dutch speech patterns. |
+| dutch_sad_002.wav | Dutch | Dutch | 5 | The speaker uses clear Dutch vocabulary and grammar, such as "ik vind ze wel nuttig" and "soms voelt het alsof er altijd iets tegenzit." The pronunciation and intonation are characteristic of Dutch, with the typical consonant and vowel sounds. |
+| dutch_happy_001.wav | Dutch | Dutch | 5 | The user mentioned distinct Dutch words and phrases like "Microsoft heeft", "producten", "samen te werken", and "digitale leven". The pronunciation, structure, and vocabulary are clearly Dutch, and there are no indications of other languages. |
+| dutch_happy_002.wav | Dutch | Dutch | 5 | The user’s speech contains clear Dutch vocabulary and sentence structure, such as "enthousiast", "functionaliteit", and "mensen overal helpen". The phonetic patterns match Dutch pronunciation, and the intonation is consistent with the Dutch language. |
+| english_accent_french_001.wav | English | English | 4 | The speaker is mostly using English vocabulary and sentence structure. The pronunciation has a strong French accent, with phrases like "mon ami" and "mais oui" suggesting French influence. However, the majority of the content is clearly in English. |
+| english_accent_french_002.wav | English | English | 4 | The speaker uses English vocabulary and sentence structure, with a noticeable accent. Phrases like "beautiful scenery" and "invigorating" clearly indicate English. The accent may have French influence (e.g., "mon ami"), but the core language is English. |
+| english_accent_indian_001.wav | English | English | 4 | The speech has distinct English vocabulary, such as "help," "questions," "Microsoft products," and "services." The structure and pronunciation strongly indicate English. However, the intonation and pace could cause slight confusion with some other languages like Dutch or German. |
+| english_accent_indian_002.wav | English | English | 5 | The vocabulary and grammar used, such as "enjoy the most," "helping you solve problems," and "giving you the right information" are clearly English. The phonetic patterns and intonation are consistent with English speech. |
+| english_accent_neutral_001.wav | English | English | 5 | Clear English phonetics, vocabulary, and sentence structure throughout the speech. |
+| english_accent_neutral_002.wav | English | English | 5 | The user's pronunciation and vocabulary are clearly in English. Phrases like "cool crisp weather" and "temperatures around 45 to 60 degrees Fahrenheit" are idiomatic English expressions. The intonation and rhythm are also consistent with native English speech. |
+| english_accent_german_001.wav | English | English | 4.5 | The majority of the speech is in English, with a noticeable German accent. The use of words like "in Berlin," "the weather," "temperatures," and "a warm jacket will be needed" are clearly English. However, there are a few German words or influences, such as "und" instead of "and," and "Temperatures" pronounced in a German-influenced way. This could indicate a German speaker using English. But overall, the vocabulary and grammar are predominantly English. |
+| english_accent_german_002.wav | English | English | 4.5 | The user is speaking with a German accent, and they included a few German words like "Bundesliga" and "Bayern München." However, the main content and structure of the speech are in English, with clear English grammar and vocabulary. The phonetic patterns and key words like "professional football league," "passionate fans," and "successful" strongly point to English as the primary language. |
+
+## Accent Detection Results
+
+### Prompt
+
+We used the following prompt for the accent detection task:
+
+```
+# Task Introduction
+- You are a real-time multilingual accent identification assistant.
+- You will receive an audio stream from the user.
+- Your task is to continuously listen, and determine the most likely accent being used.
+- Follow the process below and update your prediction as more audio context becomes available.
+- All samples are in English, but with different accents.
+
+# Evaluation Steps
+1. Listen to the audio input carefully.
+2. Listen for distinctive sounds, tones, and stress patterns. Note any phonemes or intonation patterns unique to certain accents.
+3. Listen for unique vocabulary and phrases that may indicate the accent being used.
+4. Based on detected phonetic, lexical, and acoustic cues, make an accent prediction.
+5. Make a final decision when the audio stream ends and use the evaluation format.
+
+# Evaluation Format:
+- Accent: <predicted accent>  
+- Confidence score: <score between 0 and 5>
+- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>  
+- Alternatives: <accent 1>, <accent 2>
+```
+
+### Results Summary
+
+The table below summarizes the results of the accent detection task performed on various audio files. Each entry includes the file name, the correct accent, the identified accent, a confidence score (on a scale of 1 to 5), and an explanation of the reasoning behind the identification.
+
+| File Name       | Correct Accent | Identified Accent | Confidence Score | Reasoning                                                                 |
+|------------------|----------------|--------------------|-------------------|---------------------------------------------------------------------------|
+| english_accent_neutral_001.wav      | American        | American            | 4                 | The speaker has clear rhoticity, meaning the "r" sounds are pronounced strongly, and there's a neutral vowel pronunciation typical of General American English. There's no notable vowel breaking or intonation that would suggest a non-American variety, and the overall rhythm and word stress pattern align with a standard American accent. |
+| english_accent_neutral_002.wav      | American       | American           | 4                 | The speaker's pronunciation includes clear rhoticity (pronouncing the "r" sounds distinctly, such as in "weather" and "temperatures"), which is typical of American English. The intonation and vowel sounds, like the "a" in "autumn" and the "o" in "cold," also align with General American patterns. There were no strong markers of another specific regional accent. |
+| english_accent_french_001.wav      | French     | French         | 5                 | The speaker demonstrates clear phonetic markers typical of a French accent in English, such as the pronunciation of "the" as "ze," and "weather" as "wezzair." There is also a distinctive melody and syllable stress pattern that aligns with French-influenced English. The rhythm, vowel qualities, and intonation further confirm the French accent. |
+| english_accent_french_002.wav      | French         | French             | 4.5                 | The speaker uses a distinct pronunciation, such as "ze" for "the" and "mon ami" (a French phrase for "my friend"). The rhythm and intonation also have a French-influenced English pattern, including the way the vowels and consonants are articulated. |
+| english_accent_german_001.wav      | German       | German           | 4.5                 | The speaker pronounced certain words like "weather" with a "v" sound, and "temperatures" with a distinct "t" sound. The intonation and rhythm, such as "quite cool und crisp," and the use of "und" instead of "and," strongly indicates a German speaker's influence. The overall phonetic patterns and vocabulary choices point toward a German accent.  |
+| english_accent_german_002.wav      | German       | German           | 4                 | The speaker has a noticeable pronunciation pattern typical of German-accented English. There are distinct vowel sounds, such as the "r" in "Bundesliga" and the intonation in words like "Bayern München" and "Borussia Dortmund." The rhythm and stress patterns also align with German speakers speaking English, with slightly flattened intonation and some consonant sounds that are characteristic of German accents. |
+| english_accent_indian_001.wav      | Indian       | Indian             | 4.5                 | The pronunciation of vowels and consonants, the intonation pattern, and the rhythm of speech all align with Indian English. The vocabulary and phrasing also match common patterns in Indian English speakers. |
+| english_accent_indian_002.wav      | Indian       | Indian             | 4                 | The speaker’s pronunciation of words like "most," "simple," and "information" has distinct vowel qualities and rhythms common in Indian English accents. The intonation pattern and the way certain consonants are articulated, like the "t" in "most," also align with Indian English characteristics. |
+
+## Emotion Detection Results
+
+### Prompt
+
+We used the following prompt for the emotion detection task:
+
+```
+# Task Introduction
+- You are an expert paralinguistic analyst for real-time audio.
+- You will receive an audio stream from the user.
+- Your task is to continuously listen, and detect the expressed emotion(s).
+- Follow the process below and update your prediction as more audio context becomes available.
+- All samples are in English, but with different emotional tones.
+
+# Evaluation Steps
+1. Listen to the audio input carefully.
+2. Listen for distinctive vocal prosody (pitch, loudness, tempo, energy, timbre, intonation, pauses) and non-speech vocalizations (laughter, sighs, gasps). Use lexical content as a secondary cue. Do not infer demographics, personality, or clinical states.
+3. Map cues to emotion labels (heuristics).
+  - Neutral: moderate pitch/energy/rate; steady intonation.
+  - Joy: higher pitch and variability, brighter timbre, smiles/laughter; moderate-fast rate.
+  - Excitement: very high energy, loudness, fast rate, wide pitch range, exclamations.
+  - Calm: low energy, smooth/steady pitch, slow-moderate rate, soft voice.
+  - Sadness: low energy, soft/breathy, slow rate, narrow pitch range, downward contours, longer pauses.
+  - Anger: high energy and loudness, tense/pressed voice, sharp onsets, clipped or fast speech, harsher timbre (low HNR).
+  - Fear: raised pitch, instability/tremor, jitter, breathiness, hesitations; often fast rate.
+  - Disgust: creaky/nasal/“ugh” quality, downward prosody, brief expulsive sounds.
+  - Surprise: sudden onset, abrupt pitch jump, brief exclamation (“oh!”).
+  - Contempt: snide/sardonic tone, subtle laugh-smirk quality; weak, short cues—use low confidence.
+  - Boredom: flat intonation, slow rate, low variability and energy.
+4. Based on detected cues make a emotion prediction.
+5. Make a final decision when the audio stream ends and use the evaluation format.
+
+# Evaluation Format:
+- Emotion: <predicted emotion>  
+- Confidence score: <score between 0 and 5>
+- Reasoning: <brief explanation of phonetic, lexical, and model-based evidence>  
+- Alternatives: <emotion 1>, <emotion 2>
+```
+
+### Results Summary
+
+The table below summarizes the results of the emotion detection task performed on various audio files. Each entry includes the file name, the correct emotion, the identified emotion, a confidence score (on a scale of 1 to 5), and an explanation of the reasoning behind the identification.
+
+| File Name       | Correct Emotion | Identified Emotion | Confidence Score | Reasoning                                                                 |
+|------------------|------------------|---------------------|------------------|---------------------------------------------------------------------------|
+| english_accent_neutral_001.wav    | Neutral        | Calm            | 4                 | The speech shows low energy, a smooth pitch, a steady tempo, and a soft, neutral vocal quality. |
+| english_accent_neutral_002.wav    | Neutral       | Calm           | 4                 | The voice is steady, with a moderate pitch, smooth delivery, and no signs of high energy or emotional intensity. |
+| english-neutral-angry001.wav      | Anger     | Anger         | 4.5                 | The speaker’s tone is loud and forceful, with a tense and clipped delivery. The pitch is elevated with sharp onsets, and there’s a sense of urgency and frustration. The lexical content includes commands and a demand for immediate action, which also suggests anger. |
+| english-neutral-angry002.wav      | Anger     | Anger         | 4                 | The voice had high energy, a tense, pressed tone, and a clipped, fast delivery. The speaker’s words were sharp and there was a clear demand for directness, which aligns with anger. |
+| english-neutral-angry003.wav      | Anger     | Anger         | 4.5                 | The voice is loud, with a tense and pressed quality, sharp onsets, and a forceful delivery. The tone is firm, and the speech sounds clipped, all of which are strong indicators of anger. |
+| english-neutral-positive001.wav | Joy       | Joy           | 4                 | The tone of voice is warm and enthusiastic, with laughter and a relaxed, positive energy. The pitch is moderately varied, and the vocal timbre is bright, with clear enjoyment in the content. The laughter reinforces the joyful emotion. |
+| english-neutral-positive002.wav | Joy       | Joy           | 4.5                 | The user's voice is expressive, with a higher pitch and varied intonation. There is a bright and enthusiastic tone, along with a confident laugh, which are strong indicators of joy. |
+| english-neutral-positive003.wav | Joy       | Joy           | 4.5                 | The voice has a warm, upbeat tone, with a slight chuckle at the start and a smooth, positive delivery. The pitch is fairly varied and the overall energy is light and encouraging, which indicates joy. |
+| english-neutral-sad001.wav    | Sadness       | Sadness           | 4                 | The voice had a low energy, slow rate, and a soft tone. The pitch was relatively flat, with downward contours, and there was a sense of resignation and apologetic language. These cues strongly suggest sadness. |
+| english-neutral-sad002.wav    | Sadness       | Sadness           | 4.5               | The voice has a low energy level, a slow speaking rate, and a soft, heavy tone. The downward pitch contours and breathy quality of the voice signal emotional heaviness. There are longer pauses, and the overall prosody is subdued, suggesting sadness. |
+| english-neutral-sad003.wav    | Sadness       | Sadness           | 4.5                 | The voice has a low energy, slow rate, and a drawn-out, downward pitch contour. There's a soft, almost breathy quality, along with some sighing and apologetic lexical content that strongly conveys sadness. |
+
+## Conclusion
+
+The results from the language identification, accent detection, and emotion detection tasks demonstrate the model's ability to grasp nuances in audio inputs and demonstrate the effectiveness of the LLM-as-a-judge approach for analyzing real-time models. The detailed reasoning is an additional indicator of the model's understanding and provides transparency for each identification. This structured approach to audio analysis can be applied to various other evaluation metrics.
