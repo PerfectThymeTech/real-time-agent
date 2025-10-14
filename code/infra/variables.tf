@@ -44,6 +44,17 @@ variable "container_image_reference" {
   }
 }
 
+variable "communication_service_data_location" {
+  description = "Specifies the name of the SKU used for this Key Vault."
+  type        = string
+  sensitive   = false
+  default     = "United States"
+  validation {
+    condition     = contains(["Africa", "Asia Pacific", "Australia", "Brazil", "Canada", "Europe", "France", "Germany", "India", "Japan", "Korea", "Norway", "Switzerland", "UAE", "UK", "usgov", "United States"], var.key_vault_sku_name)
+    error_message = "Please specify a valid commmunication service data location."
+  }
+}
+
 # HA/DR variables
 variable "zone_redundancy_enabled" {
   description = "Specifies whether zone-redundancy should be enabled for all resources."
