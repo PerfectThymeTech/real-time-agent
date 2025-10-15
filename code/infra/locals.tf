@@ -26,6 +26,7 @@ locals {
     name                = split("/", var.route_table_id)[8]
   }
   log_analytics_workspace = {
+    subscription_id     = split("/", var.log_analytics_workspace_id)[2]
     resource_group_name = split("/", var.log_analytics_workspace_id)[4]
     name                = split("/", var.log_analytics_workspace_id)[8]
   }

@@ -16,6 +16,8 @@ data "azurerm_route_table" "route_table" {
 }
 
 data "azurerm_log_analytics_workspace" "log_analytics_workspace" {
+  provider = azurerm.log_analytics
+
   name                = local.log_analytics_workspace.name
   resource_group_name = local.log_analytics_workspace.resource_group_name
 }
