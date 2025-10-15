@@ -12,7 +12,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Gracefully start the application before the server reports readiness."""
     setup_opentelemetry(app=app)
     yield
-    pass
 
 
 def get_app() -> FastAPI:
