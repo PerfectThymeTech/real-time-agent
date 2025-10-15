@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends
 from health.validate_request import verify_health_auth_header
-from models.heartbeat import HearbeatResult
+from models.heartbeat import HeartbeatResult
 from utils import setup_logging
 
 logger = setup_logging(__name__)
@@ -12,10 +12,10 @@ router = APIRouter()
 
 @router.get(
     "/heartbeat",
-    response_model=HearbeatResult,
+    response_model=HeartbeatResult,
     name="heartbeat",
     dependencies=[Depends(verify_health_auth_header)],
 )
-async def get_hearbeat() -> Any:
+async def get_heartbeat() -> Any:
     logger.info("Received Heartbeat Request")
-    return HearbeatResult(isAlive=True)
+    return HeartbeatResult(isAlive=True)

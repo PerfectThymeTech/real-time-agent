@@ -36,7 +36,7 @@ def setup_logging(module) -> Logger:
     # Create stream handler
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(
-        logging.Formatter("[%(asctime)s] [%(levelname)s] [%(module)-8.8s] %(message)s")
+        logging.Formatter(settings.LOGGING_FORMAT)
     )
     logger.addHandler(stream_handler)
     return logger
@@ -60,10 +60,10 @@ def setup_opentelemetry(app: FastAPI):
     # Configure basic logging configuration
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(
-        logging.Formatter("[%(asctime)s] [%(levelname)s] [%(module)-8.8s] %(message)s")
+        logging.Formatter(settings.LOGGING_FORMAT)
     )
     logging.basicConfig(
-        format="[%(asctime)s] [%(levelname)s] [%(module)-8.8s] %(message)s",
+        format=settings.LOGGING_FORMAT,
         handlers=[stream_handler],
         level=settings.LOGGING_LEVEL,
     )

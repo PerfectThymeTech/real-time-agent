@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     LOGGING_LEVEL: int = logging.INFO
     LOGGING_SAMPLING_RATIO: float = 1.0
     LOGGING_SCHEDULE_DELAY: int = 5000
+    LOGGING_FORMAT: str = "[%(asctime)s] [%(levelname)s] [%(module)-8.8s] %(message)s"
     APPLICATIONINSIGHTS_CONNECTION_STRING: str
 
 
