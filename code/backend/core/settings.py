@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    # General settings
     PROJECT_NAME: str = "RealTimeBackend"
     SERVER_NAME: str = "RealTimeBackend"
     APP_VERSION: str = "v0.1.0"

@@ -1,6 +1,6 @@
 from typing import Any
 
-from fastapi import APIRouter, WebSocket, Depends
+from fastapi import APIRouter, Depends, WebSocket
 from utils import setup_logging
 
 logger = setup_logging(__name__)
