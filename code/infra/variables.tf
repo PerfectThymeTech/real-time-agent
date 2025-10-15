@@ -22,7 +22,7 @@ variable "prefix" {
   sensitive   = false
   validation {
     condition     = length(var.prefix) >= 2 && length(var.prefix) <= 10
-    error_message = "Please specify a prefix with more than two and less than 10 characters."
+    error_message = "Please specify a prefix with between 2 and 10 characters inclusive."
   }
 }
 
@@ -45,13 +45,13 @@ variable "container_image_reference" {
 }
 
 variable "communication_service_data_location" {
-  description = "Specifies the name of the SKU used for this Key Vault."
+  description = "Specifies the data location for the Communication Service."
   type        = string
   sensitive   = false
   default     = "United States"
   validation {
-    condition     = contains(["Africa", "Asia Pacific", "Australia", "Brazil", "Canada", "Europe", "France", "Germany", "India", "Japan", "Korea", "Norway", "Switzerland", "UAE", "UK", "usgov", "United States"], var.key_vault_sku_name)
-    error_message = "Please specify a valid commmunication service data location."
+    condition     = contains(["Africa", "Asia Pacific", "Australia", "Brazil", "Canada", "Europe", "France", "Germany", "India", "Japan", "Korea", "Norway", "Switzerland", "UAE", "UK", "usgov", "United States"], var.communication_service_data_location)
+    error_message = "Please specify a valid communication service data location."
   }
 }
 
@@ -119,7 +119,7 @@ variable "route_table_id" {
 }
 
 variable "subnet_cidr_container_app" {
-  description = "Specifies the subnet cidr range for teh container app subnet."
+  description = "Specifies the subnet cidr range for the container app subnet."
   type        = string
   sensitive   = false
   validation {
