@@ -1,0 +1,14 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "azure-monitor-opentelemetry-exporter>=1.0.0b41",
+    "fastapi>=0.116.1",
+    "opentelemetry-instrumentation-fastapi>=0.58b0",
+    "opentelemetry-instrumentation-httpx>=0.58b0",
+    "opentelemetry-instrumentation-system-metrics>=0.58b0",
+    "pydantic-settings>=2.10.1",
+]
