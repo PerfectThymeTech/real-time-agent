@@ -35,6 +35,20 @@ wheels = [
 ]
 
 [[package]]
+name = "azure-communication-callautomation"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "azure-core" },
+    { name = "isodate" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ab/0a/92abae9910a3fc6b52b0e900728dc25b0ba230934b243125a5c775e53f0d/azure_communication_callautomation-1.5.0.tar.gz", hash = "sha256:0ecce73791f061a1b6d351ff151a71ee1a9ddd4cf64fd0725cf15c94f6186779", size = 145748, upload-time = "2025-09-10T20:26:24.693Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/06/a4/26654151bccba19f1d192d7540d8a209993aa363bd08a01ed1e7d32af4aa/azure_communication_callautomation-1.5.0-py3-none-any.whl", hash = "sha256:4d0926c1b3dc1650adf0b249ef7c5d1cfe0c01b98acef978470ce429bcddc41d", size = 142661, upload-time = "2025-09-10T20:26:25.912Z" },
+]
+
+[[package]]
 name = "azure-core"
 version = "1.35.1"
 source = { registry = "https://pypi.org/simple" }
@@ -46,6 +60,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/15/6b/2653adc0f33adba8f11b1903701e6b1c10d34ce5d8e25dfa13a422f832b0/azure_core-1.35.1.tar.gz", hash = "sha256:435d05d6df0fff2f73fb3c15493bb4721ede14203f1ff1382aa6b6b2bdd7e562", size = 345290, upload-time = "2025-09-11T22:58:04.481Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/27/52/805980aa1ba18282077c484dba634ef0ede1e84eec8be9c92b2e162d0ed6/azure_core-1.35.1-py3-none-any.whl", hash = "sha256:12da0c9e08e48e198f9158b56ddbe33b421477e1dc98c2e1c8f9e254d92c468b", size = 211800, upload-time = "2025-09-11T22:58:06.281Z" },
+]
+
+[[package]]
+name = "azure-eventgrid"
+version = "4.22.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "azure-core" },
+    { name = "isodate" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/68/78/c263dfcf09b8083169715628e192a4845d4cbfeb1d7476f99e3a0a3a5942/azure_eventgrid-4.22.0.tar.gz", hash = "sha256:4ab47e0d50ea49fff83db035822c3367ca1cefd6024909ba109752cc54bf0e63", size = 133538, upload-time = "2025-05-14T21:37:13.162Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d2/8e/013e56f5ec0d3dcbea05d933fc8cd4709fce208381fc2f56dfa532141f06/azure_eventgrid-4.22.0-py3-none-any.whl", hash = "sha256:bcd37b90a61545a955eadfdb21477daef133a906947af9cac5b784c4ceab898e", size = 128078, upload-time = "2025-05-14T21:37:14.876Z" },
 ]
 
 [[package]]
@@ -87,6 +115,8 @@ name = "backend"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "azure-communication-callautomation" },
+    { name = "azure-eventgrid" },
     { name = "azure-monitor-opentelemetry-exporter" },
     { name = "fastapi" },
     { name = "opentelemetry-instrumentation-fastapi" },
@@ -97,6 +127,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "azure-communication-callautomation", specifier = ">=1.5.0" },
+    { name = "azure-eventgrid", specifier = ">=4.22.0" },
     { name = "azure-monitor-opentelemetry-exporter", specifier = ">=1.0.0b41" },
     { name = "fastapi", specifier = ">=0.116.1" },
     { name = "opentelemetry-instrumentation-fastapi", specifier = ">=0.58b0" },
