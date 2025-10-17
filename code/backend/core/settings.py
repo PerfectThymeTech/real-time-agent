@@ -1,5 +1,6 @@
 import logging
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings
 
 
@@ -9,6 +10,12 @@ class Settings(BaseSettings):
     SERVER_NAME: str = "RealTimeBackend"
     APP_VERSION: str = "v0.1.0"
     API_V1_STR: str = "/v1"
+
+    # Deployment settings
+    BASE_URL: str = Field(..., alias=AliasChoices("BASE_URL", "CONTAINER_APP_HOSTNAME"))
+
+    # Azure Communication Services settings
+    ACS_CONNECTION_STRING: str
 
     # Logging settings
     DEBUG: bool = False
