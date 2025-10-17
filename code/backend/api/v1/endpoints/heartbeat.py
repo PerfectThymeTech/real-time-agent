@@ -17,5 +17,8 @@ router = APIRouter()
     dependencies=[Depends(verify_health_auth_header)],
 )
 async def get_heartbeat() -> Any:
+    """
+    Heartbeat endpoint to verify service is alive.
+    """
     logger.info("Received Heartbeat Request")
     return HeartbeatResult(isAlive=True)

@@ -105,3 +105,4 @@ def process_incoming_call_event(
                 validation_response=validation_code
             )
             return validation_response
+        return None

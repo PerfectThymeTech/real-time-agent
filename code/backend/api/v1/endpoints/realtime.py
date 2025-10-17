@@ -14,6 +14,9 @@ router = APIRouter()
     # dependencies=[Depends(TODO)],
 )
 async def realtime(websocket: WebSocket) -> Any:
+    """
+    WebSocket endpoint for real-time communication.
+    """
     logger.info("Received Websocket Connection")
     await websocket.accept()
     await websocket.send_text(f"WebSocket connection established")
