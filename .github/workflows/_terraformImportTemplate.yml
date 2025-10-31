@@ -1,0 +1,108 @@
+name: Terraform Import Template
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        default: "dev"
+        description: "Specifies the environment of the deployment."
+      config:
+        required: true
+        type: string
+        description: "Specifies the configuration folder for the deployment."
+      terraform_version:
+        required: true
+        type: string
+        description: "Specifies the terraform version."
+      node_version:
+        required: true
+        type: number
+        description: "Specifies the node version."
+      working_directory:
+        required: true
+        type: string
+        description: "Specifies the working directory."
+      tenant_id:
+        required: true
+        type: string
+        description: "Specifies the tenant id of the deployment."
+      subscription_id:
+        required: true
+        type: string
+        description: "Specifies the subscription id of the deployment."
+      import_target:
+        required: true
+        type: string
+        description: "Specifies the terraform resource address (e.g., azurerm_resource_group.my_rg)."
+      resource_id:
+        required: true
+        type: string
+        description: "Specifies the resource id to import (e.g., /subscriptions/.../resourceGroups/myResourceGroup)."
+    secrets:
+      CLIENT_ID:
+        required: true
+        description: "Specifies the client id."
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  deployment:
+    name: Terraform Import
+    runs-on: [self-hosted]
+    continue-on-error: false
+    environment: ${{ inputs.environment }}
+    # if: github.event_name == 'push' || github.event_name == 'release'
+    concurrency:
+      group: terraform-${{ inputs.config }}-${{ inputs.environment }}
+      cancel-in-progress: false
+
+    env:
+      ARM_TENANT_ID: ${{ inputs.tenant_id }}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.subscription_id }}
+      ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      ARM_USE_OIDC: true
+
+    steps:
+      # Setup Node
+      - name: Setup Node
+        id: node_setup
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      # Setup Terraform
+      - name: Setup Terraform
+        id: terraform_setup
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+          terraform_wrapper: true
+
+      # Check Out Repository
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          submodules: true
+
+      # Terraform Init
+      - name: Terraform Init
+        id: terraform_init
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          terraform init -backend-config=../../config/${CONFIG}/azurerm.tfbackend
+        env:
+          CONFIG: ${{ inputs.config }}
+
+      # Terraform Import
+      - name: Terraform Import
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          terraform import -var-file="../../config/${CONFIG}/vars.tfvars" -input=false '${{ inputs.import_target }}' '${{ inputs.resource_id }}'
+        env:
+          CONFIG: ${{ inputs.config }}
