@@ -9,7 +9,7 @@ module "ai_service" {
   location                                                = var.location
   location_private_endpoint                               = var.location
   resource_group_name                                     = azurerm_resource_group.resource_group.name
-  tags                                                    = local.tags
+  tags                                                    = var.tags
   cognitive_account_name                                  = "${local.prefix}-ai001"
   cognitive_account_kind                                  = "OpenAI"
   cognitive_account_sku                                   = "S0"
