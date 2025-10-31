@@ -25,5 +25,14 @@ class Settings(BaseSettings):
     LOGGING_FORMAT: str = "[%(asctime)s] [%(levelname)s] [%(module)-8.8s] %(message)s"
     APPLICATIONINSIGHTS_CONNECTION_STRING: str = None
 
+    # Open AI settings
+    INSTRUCTIONS: str
+    REALTIME_MODEL_NAME: str = Field(
+        ..., alias=AliasChoices("REALTIME_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME")
+    )
+    TRANSCRIPTION_MODEL_NAME: str = "gpt-4o-transcribe"
+    AZURE_OPENAI_API_KEY: str
+    AZURE_OPENAI_ENDPOINT: str
+
 
 settings = Settings()
