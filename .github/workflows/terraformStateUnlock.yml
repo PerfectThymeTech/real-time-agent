@@ -1,0 +1,39 @@
+name: Unlock Terraform State
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Specifies the environment of the deployment."
+        required: true
+        type: choice
+        default: "dev"
+        options:
+        - "dev"
+      config:
+        description: "Specifies the config of the deployment."
+        required: true
+        type: choice
+        default: "dev"
+        options:
+        - "dev"
+      lock_id:
+        description: 'lock_id of the state to unlock'
+        required: true
+        type: string
+
+jobs:
+  terraform_unlock:
+    uses: ./.github/workflows/_terraformStateUnlockTemplate.yml
+    name: "Dev"
+    with:
+      environment: ${{ inputs.environment }}
+      config: ${{ inputs.config }}
+      terraform_version: "1.13.4"
+      node_version: 24
+      working_directory: "./code/infra"
+      tenant_id: "37963dd4-f4e6-40f8-a7d6-24b97919e452"
+      subscription_id: "1fdab118-1638-419a-8b12-06c9543714a0"
+      lock_id: ${{ inputs.lock_id }}
+    secrets:
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
