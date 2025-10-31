@@ -1,5 +1,5 @@
 from typing import Any
-from urllib.parse import urlencode, urlparse, urlunparse
+from urllib.parse import urlencode
 from uuid import uuid4
 
 from azure.communication.callautomation import (
