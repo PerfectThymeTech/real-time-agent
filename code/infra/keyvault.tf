@@ -6,7 +6,7 @@ module "key_vault" {
   }
 
   location                             = var.location
-  resource_group_name                  = azurerm_resource_group.resource_group_container_app.name
+  resource_group_name                  = azurerm_resource_group.resource_group.name
   tags                                 = var.tags
   key_vault_name                       = "${local.prefix}-kv001"
   key_vault_sku_name                   = "standard"

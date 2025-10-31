@@ -1,7 +1,7 @@
 resource "azurerm_container_app_environment" "container_app_environment" {
   name                = "${local.prefix}-cae001"
   location            = var.location
-  resource_group_name = azurerm_resource_group.resource_group_container_app.name
+  resource_group_name = azurerm_resource_group.resource_group.name
   tags                = var.tags
 
   dapr_application_insights_connection_string = module.application_insights.application_insights_connection_string

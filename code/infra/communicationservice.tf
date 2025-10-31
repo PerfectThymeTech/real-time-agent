@@ -5,7 +5,7 @@ module "communication_service" {
   }
 
   location                            = var.location
-  resource_group_name                 = azurerm_resource_group.resource_group_container_app.name
+  resource_group_name                 = azurerm_resource_group.resource_group.name
   tags                                = var.tags
   communication_service_name          = "${local.prefix}-acs001"
   communication_service_data_location = var.communication_service_data_location
