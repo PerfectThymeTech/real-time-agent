@@ -1,5 +1,6 @@
 # General variables
 location    = "northeurope"
+location_aoai = "swedencentral"
 environment = "dev"
 prefix      = "voi-aig"
 tags = {
@@ -23,12 +24,12 @@ service_principal_name_terraform_plan = ""
 vnet_id                       = "/subscriptions/1fdab118-1638-419a-8b12-06c9543714a0/resourceGroups/ptt-dev-networking-rg/providers/Microsoft.Network/virtualNetworks/spoke-ptt-dev-vnet001"
 nsg_id                        = "/subscriptions/1fdab118-1638-419a-8b12-06c9543714a0/resourceGroups/ptt-dev-networking-rg/providers/Microsoft.Network/networkSecurityGroups/ptt-dev-default-nsg001"
 route_table_id                = "/subscriptions/1fdab118-1638-419a-8b12-06c9543714a0/resourceGroups/ptt-dev-networking-rg/providers/Microsoft.Network/routeTables/ptt-dev-default-rt001"
-subnet_cidr_container_app     = "10.3.0.92/26"
-subnet_cidr_private_endpoints = "10.3.0.128/26"
+subnet_cidr_container_app     = "10.3.1.0/26"
+subnet_cidr_private_endpoints = "10.3.1.64/26"
 
 # DNS variables
 private_dns_zone_id_open_ai = "/subscriptions/e82c5267-9dc4-4f45-ac13-abdd5e130d27/resourceGroups/ptt-dev-privatedns-rg/providers/Microsoft.Network/privateDnsZones/privatelink.openai.azure.com"
-private_dns_zone_id_vault   = "/subscriptions/e82c5267-9dc4-4f45-ac13-abdd5e130d27/resourceGroups/ptt-dev-privatedns-rg/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net"
+private_dns_zone_id_vault = "/subscriptions/e82c5267-9dc4-4f45-ac13-abdd5e130d27/resourceGroups/ptt-dev-privatedns-rg/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net"
 
 # Customer-managed key variables
 customer_managed_key = null

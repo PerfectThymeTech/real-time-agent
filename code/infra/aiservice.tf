@@ -6,7 +6,7 @@ module "ai_service" {
     time    = time
   }
 
-  location                                                = var.location
+  location                                                = var.location_aoai
   location_private_endpoint                               = var.location
   resource_group_name                                     = azurerm_resource_group.resource_group.name
   tags                                                    = var.tags
