@@ -106,3 +106,67 @@ def process_incoming_call_event(
             )
             return validation_response
         return None
+
+
+async def process_callback_event(
+    contextId: str, events: list[dict], client: CallAutomationClient
+) -> None:
+    """
+    Processes a callback event for a call.
+    """
+    for event in events:
+        # Get event data
+        event_type = event.get("type")
+        event_data = event.get("data", {})
+
+        logger.info(
+            f"Processing event. Context ID: {contextId}, Event Type: {event_type}, Correlation ID: {event_data.get('correlationId')}, Call Connection ID: {event_data.get('callConnectionId')}"
+        )
+
+        match event_type:
+            case "Microsoft.Communication.CallConnected":
+                logger.info(
+                    f"Call connected event received for Context ID: {contextId}"
+                )
+
+                # Get call connection properties
+                call_properties = await client.get_call_connection(
+                    call_connection_id=event_data.get("callConnectionId")
+                ).get_call_properties()
+                logger.info(f"MediaStreamingSubscription: {call_properties.med}")
+
+            case (
+                "Microsoft.Communication.MediaStreamingStarted"
+                | "Microsoft.Communication.MediaStreamingStopped"
+            ):
+                logger.info(
+                    f"Media streaming event received for Context ID: {contextId}"
+                )
+
+                # Get Media Streaming Update
+                media_streaming_update = event_data.get("mediaStreamingUpdate", {})
+                logger.info(
+                    f"Media Streaming Content Type: {media_streaming_update.get('contentType')}, Media Streaming Status: {media_streaming_update.get('contentType')}, Media Streaming Details: {media_streaming_update.get('mediaStreamingStatusDetails')}"
+                )
+
+            case "Microsoft.Communication.MediaStreamingFailed":
+                logger.info(
+                    f"Media streaming failed event received for Context ID: {contextId}"
+                )
+
+                # Get Result Information
+                result_information = event_data.get("resultInformation", {})
+                logger.info(
+                    f"Code: {result_information.get('code')}, Subcode: {result_information.get('subCode')}"
+                )
+
+            case "Microsoft.Communication.CallDisconnected":
+                logger.info(
+                    f"Call disconnected event received for Context ID: {contextId}"
+                )
+
+            case _:
+                logger.warning(
+                    f"Unhandled event type: {event_type} for Context ID: {contextId}"
+                )
+    return None
