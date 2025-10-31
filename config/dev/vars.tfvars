@@ -23,7 +23,7 @@ service_principal_name_terraform_plan = ""
 vnet_id                       = "/subscriptions/1fdab118-1638-419a-8b12-06c9543714a0/resourceGroups/ptt-dev-networking-rg/providers/Microsoft.Network/virtualNetworks/spoke-ptt-dev-vnet001"
 nsg_id                        = "/subscriptions/1fdab118-1638-419a-8b12-06c9543714a0/resourceGroups/ptt-dev-networking-rg/providers/Microsoft.Network/networkSecurityGroups/ptt-dev-default-nsg001"
 route_table_id                = "/subscriptions/1fdab118-1638-419a-8b12-06c9543714a0/resourceGroups/ptt-dev-networking-rg/providers/Microsoft.Network/routeTables/ptt-dev-default-rt001"
-subnet_cidr_container_app     = "10.3.0.64/26"
+subnet_cidr_container_app     = "10.3.0.92/26"
 subnet_cidr_private_endpoints = "10.3.0.128/26"
 
 # DNS variables
