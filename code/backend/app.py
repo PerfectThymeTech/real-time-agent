@@ -9,13 +9,16 @@ from utils import setup_opentelemetry
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    """Gracefully start the application before the server reports readiness."""
+    """
+    Gracefully start the application before the server reports readiness.
+    """
     setup_opentelemetry(app=app)
     yield
 
 
 def get_app() -> FastAPI:
-    """Setup the Fast API server.
+    """
+    Setup the Fast API server.
 
     RETURNS (FastAPI): The FastAPI object to start the server.
     """
