@@ -1,6 +1,10 @@
 from typing import Any, Optional
 
-from calls.utils import get_acs_client, process_incoming_call_event, process_callback_event
+from calls.utils import (
+    get_acs_client,
+    process_callback_event,
+    process_incoming_call_event,
+)
 from fastapi import APIRouter, Depends
 from models.calls import ValidationResponse
 from utils import setup_logging
@@ -40,6 +44,4 @@ async def post_callback_context(
     Receives callback events for a call from Azure Communication Services.
     """
     logger.info("Received Callback Context Event for a Call")
-    process_callback_event(
-        context_id=contextId, events=events, client=acs_client
-    )
+    process_callback_event(context_id=contextId, events=events, client=acs_client)
