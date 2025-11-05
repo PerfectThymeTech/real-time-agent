@@ -1,9 +1,12 @@
+import base64
 from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
 from calls.utils import get_acs_client
 from fastapi import APIRouter, Depends, Header, WebSocket
-from utils import setup_logging
+from logs import setup_logging
+from realtime.communication import CommunicationHandler
+from starlette.websockets import WebSocketState
 
 logger = setup_logging(__name__)
 
@@ -36,4 +39,38 @@ async def realtime(
         )
 
     async with AsyncExitStack() as stack:
-        pass
+        # Create and init communication handler
+        comm_handler = CommunicationHandler(websocket=websocket)
+        await comm_handler.init_model_realtime_session()
+        try:
+            while websocket.client_state == WebSocketState.CONNECTED:
+                # Collect websocket messages
+                message = await websocket.receive_json()
+
+                match message.get("type", None):
+                    case "AudioData":
+                        logger.info("Received audio data over WebSocket")
+
+                        # Extract audio data
+                        audio_data_base64 = message.get("audioData", {}).get(
+                            "data", None
+                        )
+
+                        # Convert base64 string to bytes
+                        audio_data_bytes = base64.b64decode(audio_data_base64)
+
+                        # Send audio data to the real time model session
+                        if audio_data_bytes:
+                            await comm_handler.send_audio(audio=audio_data_bytes)
+
+                    case _:
+                        logger.warning(
+                            f"Unknown data type received over WebSocket: {message.get('type', None)}"
+                        )
+
+        except Exception as e:
+            logger.error(f"Unexpected exception occured: {e}", exc_info=e)
+
+        finally:
+            # Close session
+            await comm_handler.end_session()
