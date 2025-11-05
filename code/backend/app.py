@@ -4,7 +4,7 @@ from typing import AsyncGenerator
 from api.v1.api_v1 import api_v1_router
 from core.settings import settings
 from fastapi import FastAPI
-from utils import setup_opentelemetry
+from logs import setup_opentelemetry
 
 
 @asynccontextmanager

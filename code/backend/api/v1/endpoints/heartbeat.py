@@ -2,8 +2,8 @@ from typing import Any
 
 from fastapi import APIRouter, Depends
 from health.validate_request import verify_health_auth_header
+from logs import setup_logging
 from models.heartbeat import HeartbeatResult
-from utils import setup_logging
 
 logger = setup_logging(__name__)
 

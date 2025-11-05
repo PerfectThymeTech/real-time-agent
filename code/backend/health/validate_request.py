@@ -4,7 +4,7 @@ from typing import Annotated
 
 from core.settings import settings
 from fastapi import Header, HTTPException
-from utils import setup_logging
+from logs import setup_logging
 
 logger = setup_logging(__name__)
 

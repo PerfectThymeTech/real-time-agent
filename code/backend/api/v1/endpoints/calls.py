@@ -6,8 +6,8 @@ from calls.utils import (
     process_incoming_call_event,
 )
 from fastapi import APIRouter, Depends
+from logs import setup_logging
 from models.calls import ValidationResponse
-from utils import setup_logging
 
 logger = setup_logging(__name__)
 
