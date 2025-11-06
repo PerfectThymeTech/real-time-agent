@@ -1,4 +1,5 @@
-FROM python:3.13.9
+
+FROM ghcr.io/astral-sh/uv:0.0.7-python3.13-bookworm-slim
 
 # Setup a non-root user
 RUN groupadd --system --gid 999 nonroot \
@@ -15,9 +16,6 @@ ENV UV_LINK_MODE=copy
 
 # Ensure installed tools can be executed out of the box
 ENV UV_TOOL_BIN_DIR=/usr/local/bin
-
-# Install uv (hash for version 0.9.7)
-COPY --from=docker.io/astral/uv:0adb444806e8bcea7e7a5e9ae90d1288778a0b54 /uv /uvx /bin/
 
 # Install the project's dependencies using the lockfile and settings
 RUN --mount=type=cache,target=/root/.cache/uv \
