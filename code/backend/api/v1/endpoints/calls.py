@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from calls.utils import (
+from calls.process import (
     get_acs_client,
     process_callback_event,
     process_incoming_call_event,
@@ -44,4 +44,4 @@ async def post_callback_context(
     Receives callback events for a call from Azure Communication Services.
     """
     logger.info("Received Callback Context Event for a Call")
-    process_callback_event(context_id=contextId, events=events, client=acs_client)
+    await process_callback_event(context_id=contextId, events=events, client=acs_client)

@@ -1,4 +1,5 @@
 import logging
+from logging import Logger
 
 from azure.monitor.opentelemetry.exporter import (
     ApplicationInsightsSampler,
@@ -24,7 +25,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.trace import Tracer, set_tracer_provider
 
 
-def setup_logging(module) -> logging.Logger:
+def setup_logging(module) -> Logger:
     """Setup logging and event handler.
 
     RETURNS (Logger): The logger object to log activities.
