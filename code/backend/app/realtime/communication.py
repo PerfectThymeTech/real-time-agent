@@ -14,10 +14,10 @@ from agents.realtime.model_events import (
     RealtimeModelRawServerEvent,
 )
 from app.core.settings import settings
-from fastapi import WebSocket
 from app.logs import setup_logging
-from starlette.websockets import WebSocketState
 from app.utils import _truncate_str
+from fastapi import WebSocket
+from starlette.websockets import WebSocketState
 
 logger = setup_logging(__name__)
 

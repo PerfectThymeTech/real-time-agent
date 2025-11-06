@@ -5,9 +5,9 @@ from app.calls.process import (
     process_callback_event,
     process_incoming_call_event,
 )
-from fastapi import APIRouter, Depends
 from app.logs import setup_logging
 from app.models.calls import ValidationResponse
+from fastapi import APIRouter, Depends
 
 logger = setup_logging(__name__)
 

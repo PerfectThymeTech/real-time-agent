@@ -3,8 +3,8 @@ from hashlib import sha256
 from typing import Annotated
 
 from app.core.settings import settings
-from fastapi import Header, HTTPException
 from app.logs import setup_logging
+from fastapi import Header, HTTPException
 
 logger = setup_logging(__name__)
 

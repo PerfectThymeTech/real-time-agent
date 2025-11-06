@@ -8,7 +8,7 @@ RUN groupadd --system --gid 999 nonroot \
 WORKDIR /app
 
 # UV commit hash for version 0.9.7
-ENV UV_VERSION=0adb444806e8bcea7e7a5e9ae90d1288778a0b54 
+ENV UV_VERSION=0adb444806e8bcea7e7a5e9ae90d1288778a0b54
 
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1

@@ -2,6 +2,9 @@ from typing import Any
 from urllib.parse import urlencode
 from uuid import uuid4
 
+from app.core.settings import settings
+from app.logs import setup_logging
+from app.models.calls import ValidationResponse
 from azure.communication.callautomation import (
     AudioFormat,
     CallAutomationClient,
@@ -12,9 +15,6 @@ from azure.communication.callautomation import (
 )
 from azure.core.exceptions import HttpResponseError
 from azure.eventgrid import EventGridEvent, SystemEventNames
-from app.core.settings import settings
-from app.logs import setup_logging
-from app.models.calls import ValidationResponse
 
 logger = setup_logging(__name__)
 

@@ -3,8 +3,8 @@ from typing import AsyncGenerator
 
 from app.api.v1.api_v1 import api_v1_router
 from app.core.settings import settings
-from fastapi import FastAPI
 from app.logs import setup_opentelemetry
+from fastapi import FastAPI
 
 
 @asynccontextmanager
