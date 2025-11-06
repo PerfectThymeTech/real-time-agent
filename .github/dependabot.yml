@@ -24,15 +24,26 @@ updates:
       - "pip"
       - "dependencies"
 
-  # Maintain dependencies for pip
-  - package-ecosystem: "pip"
+  # Maintain dependencies for uv
+  - package-ecosystem: "uv"
     directory: "/code/backend"
     schedule:
       interval: "weekly"
       day: "sunday"
       time: "10:00"
     labels:
-      - "pip"
+      - "uv"
+      - "dependencies"
+
+  # Maintain dependencies for docker
+  - package-ecosystem: "docker"
+    directory: "/code/backend"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "10:00"
+    labels:
+      - "docker"
       - "dependencies"
 
   # Maintain dependencies for Terraform
