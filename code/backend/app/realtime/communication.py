@@ -186,7 +186,7 @@ class CommunicationHandler:
                         truncated_data = _truncate_str(str(event.data), 200)
                         logger.debug(f"Data: '{truncated_data}'")
                         logger.debug(f"Event Info: '{event.info}'")
-                        
+
                 except Exception as e:
                     logger.warning(f"Error processing events data: {e}")
 
@@ -197,9 +197,13 @@ class CommunicationHandler:
                 elif event.type == "handoff":
                     pass
                 elif event.type == "tool_start":
-                    logger.info(f"Tool call start detected. Agent: '{event.agent}', Tool Name: '{event.tool.name}', Tool arguments: '{event.arguments}''")
+                    logger.info(
+                        f"Tool call start detected. Agent: '{event.agent}', Tool Name: '{event.tool.name}', Tool arguments: '{event.arguments}''"
+                    )
                 elif event.type == "tool_end":
-                    logger.info(f"Tool call end detected. Agent: '{event.agent}', Tool Name: '{event.tool.name}', Tool arguments: '{event.arguments}', Tool output: '{event.output}'")
+                    logger.info(
+                        f"Tool call end detected. Agent: '{event.agent}', Tool Name: '{event.tool.name}', Tool arguments: '{event.arguments}', Tool output: '{event.output}'"
+                    )
                 elif event.type == "audio":
                     if event.audio and event.audio.data:
                         await self.return_audio(event.audio.data)
