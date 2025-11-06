@@ -41,6 +41,9 @@ async def realtime(
         comm_handler = CommunicationHandler(websocket=websocket)
         await comm_handler.init_model_realtime_session()
 
+        # Init variable
+        error_occurred = False
+
         try:
             # Receive audio data over websocket
             await comm_handler.receive_audio()
