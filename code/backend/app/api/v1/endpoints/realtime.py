@@ -1,12 +1,10 @@
-import base64
 from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
-from app.calls.utils import get_acs_client
+from app.calls.process import get_acs_client
 from fastapi import APIRouter, Depends, Header, WebSocket
 from app.logs import setup_logging
 from app.realtime.communication import CommunicationHandler
-from starlette.websockets import WebSocketState
 
 logger = setup_logging(__name__)
 
@@ -42,35 +40,25 @@ async def realtime(
         # Create and init communication handler
         comm_handler = CommunicationHandler(websocket=websocket)
         await comm_handler.init_model_realtime_session()
+
+        # Init variable
+        error_occurred = False
+
         try:
-            while websocket.client_state == WebSocketState.CONNECTED:
-                # Collect websocket messages
-                message = await websocket.receive_json()
-
-                match message.get("type", None):
-                    case "AudioData":
-                        logger.info("Received audio data over WebSocket")
-
-                        # Extract audio data
-                        audio_data_base64 = message.get("audioData", {}).get(
-                            "data", None
-                        )
-
-                        # Convert base64 string to bytes
-                        audio_data_bytes = base64.b64decode(audio_data_base64)
-
-                        # Send audio data to the real time model session
-                        if audio_data_bytes:
-                            await comm_handler.send_audio(audio=audio_data_bytes)
-
-                    case _:
-                        logger.warning(
-                            f"Unknown data type received over WebSocket: {message.get('type', None)}"
-                        )
+            # Receive audio data over websocket
+            await comm_handler.receive_audio()
 
         except Exception as e:
-            logger.error(f"Unexpected exception occured: {e}", exc_info=e)
+            logger.error(f"Unexpected exception occurred: {e}", exc_info=e)
+            error_occurred = True
+
+            # End websocket connection
+            await websocket.close(code=1011, reason="Internal server error")
 
         finally:
             # Close session
             await comm_handler.end_session()
+
+            # End websocket connection
+            if not error_occurred:
+                await websocket.close(code=1000, reason="Ending connection normally")

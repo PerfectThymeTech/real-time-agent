@@ -2,33 +2,28 @@ import asyncio
 import base64
 import json
 
-from agents.mcp import MCPServerStreamableHttp
 from agents.realtime import RealtimeAgent, RealtimeRunner
 from agents.realtime.config import (
     RealtimeInputAudioTranscriptionConfig,
-    RealtimeModelTracingConfig,
     RealtimeRunConfig,
     RealtimeSessionModelSettings,
     RealtimeTurnDetectionConfig,
 )
-from agents.realtime.events import RealtimeAudioEnd
 from agents.realtime.model import RealtimeModelConfig
 from agents.realtime.model_events import (
-    RealtimeModelInputAudioTranscriptionCompletedEvent,
     RealtimeModelRawServerEvent,
 )
-from agents.realtime.model_inputs import RealtimeModelSendRawMessage
-from agents.realtime.session import RealtimeSession
 from app.core.settings import settings
 from fastapi import WebSocket
 from app.logs import setup_logging
+from starlette.websockets import WebSocketState
 from app.utils import _truncate_str
 
 logger = setup_logging(__name__)
 
 
 class CommunicationHandler:
-    async def __init__(self, websocket: WebSocket):
+    def __init__(self, websocket: WebSocket):
         """
         Initialize the communication handler.
         """
@@ -98,14 +93,18 @@ class CommunicationHandler:
         # Set properties
         logger.info("Model real time session initialized")
         self.session = session
+        self.session_context = session_context
         self.receive_task = receive_task
 
     async def end_session(self):
         """
         End the session.
         """
-        self.receive_task.cancel()
-        await self.session.__aexit__()
+        await self.session_context.__aexit__(None, None, None)
+        try:
+            self.receive_task.cancel()
+        except asyncio.CancelledError as e:
+            logger.error(f"Error cancelling receive task: {e}")
 
     async def send_audio(self, audio: bytes):
         """
@@ -116,35 +115,33 @@ class CommunicationHandler:
             commit=False,
         )
 
-    async def recive_audio(self):
+    async def receive_audio(self):
         """
         Receive audio data over the WebSocket from the client and send it to the real time model session.
         """
-        while True:
-            # Receive audio data from the WebSocket
-            websocket_data = await self.websocket.receive_text()
+        while self.websocket.client_state == WebSocketState.CONNECTED:
+            # Collect websocket messages
+            websocket_data = await self.websocket.receive_json()
 
-            # Parse websocket data
-            data = json.loads(websocket_data)
-            data_type = data.get("type", None)
-
-            match data_type:
+            match websocket_data.get("type", None):
                 case "AudioData":
                     logger.info("Received audio data over WebSocket")
 
                     # Extract audio data
-                    audio_data_b64 = data.get("data", None)
+                    audio_data_base64 = websocket_data.get("audioData", {}).get(
+                        "data", None
+                    )
+
+                    # Convert base64 string to bytes
+                    audio_data_bytes = base64.b64decode(audio_data_base64)
 
                     # Send audio data to the real time model session
-                    if audio_data_b64:
-                        await self.session.send_audio(
-                            audio=audio_data_b64,
-                            commit=False,
-                        )
+                    if audio_data_bytes:
+                        await self.send_audio(audio=audio_data_bytes)
 
                 case _:
                     logger.warning(
-                        f"Unknown data type received over WebSocket: {data_type}"
+                        f"Unknown data type received over WebSocket: {websocket_data.get('type', None)}"
                     )
 
     async def return_audio(self, audio: bytes):
@@ -155,10 +152,23 @@ class CommunicationHandler:
         await self.websocket.send_text(
             json.dumps(
                 {
-                    "kind": "AudioData",
-                    "audioData": {
-                        "data": audio  # base64.b64encode(audio).decode("utf-8") # TODO: Validate this
-                    },
+                    "Kind": "AudioData",
+                    "AudioData": {"Data": base64.b64encode(audio).decode("utf-8")},
+                }
+            )
+        )
+
+    async def interrupt_audio(self):
+        """
+        Interrupt audio data to the client over the WebSocket.
+        """
+        logger.debug("Interrupt audio in ACS")
+        await self.websocket.send_text(
+            json.dumps(
+                {
+                    "Kind": "StopAudio",
+                    "AudioData": None,
+                    "StopAudio": {},
                 }
             )
         )
@@ -174,7 +184,7 @@ class CommunicationHandler:
                 try:
                     if event.data:
                         truncated_data = _truncate_str(str(event.data), 200)
-                        logger.info(f"Data: '{truncated_data}'")
+                        logger.debug(f"Data: '{truncated_data}'")
                 except Exception as e:
                     logger.warning(f"Error processing events data: {e}")
 
@@ -186,16 +196,13 @@ class CommunicationHandler:
                     pass
                 elif event.type == "tool_start":
                     logger.info(f"Tool Call: {event.tool.name} - {event.info}")
-                    pass
                 elif event.type == "tool_end":
                     pass
                 elif event.type == "audio":
                     if event.audio and event.audio.data:
                         await self.return_audio(event.audio.data)
-                        pass
                 elif event.type == "audio_interrupted":
-                    # await interrupt_audio() # Not needed on model side as the model handles this internally. We just need to interrupt the output on ACS side.
-                    pass
+                    await self.interrupt_audio()
                 elif event.type == "audio_end":
                     pass
                 elif event.type == "history_updated":
@@ -213,17 +220,12 @@ class CommunicationHandler:
                         raw_event_type = event.data.data.get("type", None)
                         logger.info(f"Raw event type: {raw_event_type}")
 
-                        if (
-                            raw_event_type
-                            and raw_event_type
-                            == "response.output_audio_transcript.done"
-                        ):
+                        if raw_event_type == "response.output_audio_transcript.done":
                             logger.info(
                                 f"Model output transcription completed: '{event.data.data.get('transcript', None)}'"
                             )
                         elif (
                             raw_event_type
-                            and raw_event_type
                             == "conversation.item.input_audio_transcription.completed"
                         ):
                             logger.info(
@@ -231,11 +233,11 @@ class CommunicationHandler:
                             )
 
                 elif event.type == "error":
-                    pass
+                    logger.error(f"Error event received from model: {event.error}")
                 elif event.type == "input_audio_timeout_triggered":
                     pass
                 else:
                     pass
         except Exception as e:
-            logger.error(f"Breaking Error processing events for session: {e}")
+            logger.error(f"Breaking error processing events for session: {e}")
             raise e
