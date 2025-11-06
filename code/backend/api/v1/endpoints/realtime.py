@@ -47,10 +47,15 @@ async def realtime(
 
         except Exception as e:
             logger.error(f"Unexpected exception occurred: {e}", exc_info=e)
+            error_occurred = True
+
+            # End websocket connection
+            await websocket.close(code=1011, reason="Internal server error")
 
         finally:
             # Close session
             await comm_handler.end_session()
 
             # End websocket connection
-            await websocket.close(code=1011, reason="Internal server error")
+            if not error_occurred:
+                await websocket.close(code=1000, reason="Ending connection normally")
