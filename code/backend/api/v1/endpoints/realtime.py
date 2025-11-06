@@ -1,4 +1,3 @@
-import base64
 from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
@@ -6,7 +5,6 @@ from calls.process import get_acs_client
 from fastapi import APIRouter, Depends, Header, WebSocket
 from logs import setup_logging
 from realtime.communication import CommunicationHandler
-from starlette.websockets import WebSocketState
 
 logger = setup_logging(__name__)
 
@@ -42,6 +40,7 @@ async def realtime(
         # Create and init communication handler
         comm_handler = CommunicationHandler(websocket=websocket)
         await comm_handler.init_model_realtime_session()
+
         try:
             # Receive audio data over websocket
             await comm_handler.receive_audio()
@@ -52,3 +51,6 @@ async def realtime(
         finally:
             # Close session
             await comm_handler.end_session()
+
+            # End websocket connection
+            await websocket.close(code=1011, reason="Internal server error")

@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from calls.process import (
     get_acs_client,
