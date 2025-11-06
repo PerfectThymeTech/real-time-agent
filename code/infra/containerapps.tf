@@ -52,3 +52,82 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_container_app_
     }
   }
 }
+
+resource "azurerm_container_app" "container_app_backend" {
+  name                = "${local.prefix}-ca001-backend"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  tags                = var.tags
+  identity {
+    type = "UserAssigned"
+    identity_ids = [
+      module.user_assigned_identity.user_assigned_identity_id
+    ]
+  }
+
+  container_app_environment_id = azurerm_container_app_environment.container_app_environment.id
+  ingress {
+    allow_insecure_connections = false
+    client_certificate_mode    = "accept"
+    external_enabled           = true
+    # ip_security_restriction {
+
+    # }
+    target_port = 80
+    transport   = "auto"
+    traffic_weight {
+      latest_revision = true
+      percentage      = 100
+    }
+  }
+  # max_inactive_revisions =
+  revision_mode = "Single"
+  secret {
+    name                = "acs-connection-string"
+    identity            = module.user_assigned_identity.user_assigned_identity_id
+    key_vault_secret_id = azurerm_key_vault_secret.key_vault_secret_communication_service_primary_connection_string.id
+  }
+  secret {
+    name                = "ai-connection-string"
+    identity            = module.user_assigned_identity.user_assigned_identity_id
+    key_vault_secret_id = azurerm_key_vault_secret.key_vault_secret_application_insights_connection_string.id
+  }
+  secret {
+    name                = "aoai-primary-access-key"
+    identity            = module.user_assigned_identity.user_assigned_identity_id
+    key_vault_secret_id = azurerm_key_vault_secret.key_vault_secret_aoai_primary_access_key.id
+  }
+  template {
+    container {
+      name   = "real-time-backend"
+      image  = var.container_image_reference
+      cpu    = 0.5
+      memory = "1.0Gi"
+      env {
+        name        = "ACS_CONNECTION_STRING"
+        secret_name = "acs-connection-string"
+      }
+      env {
+        name        = "APPLICATIONINSIGHTS_CONNECTION_STRING"
+        secret_name = "ai-connection-string"
+      }
+      env {
+        name  = "AZURE_OPENAI_ENDPOINT"
+        value = module.ai_service.cognitive_account_endpoint
+      }
+      env {
+        name        = "AZURE_OPENAI_API_KEY"
+        secret_name = "aoai-primary-access-key"
+      }
+    }
+    http_scale_rule {
+      name                = "http-scale-rule"
+      concurrent_requests = 50
+    }
+    min_replicas                     = 1
+    max_replicas                     = 10
+    revision_suffix                  = "real-time-backend"
+    termination_grace_period_seconds = 10
+  }
+  workload_profile_name = "Consumption"
+}
