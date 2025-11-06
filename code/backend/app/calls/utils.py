@@ -12,9 +12,9 @@ from azure.communication.callautomation import (
 )
 from azure.core.exceptions import HttpResponseError
 from azure.eventgrid import EventGridEvent, SystemEventNames
-from core.settings import settings
-from logs import setup_logging
-from models.calls import ValidationResponse
+from app.core.settings import settings
+from app.logs import setup_logging
+from app.models.calls import ValidationResponse
 
 logger = setup_logging(__name__)
 

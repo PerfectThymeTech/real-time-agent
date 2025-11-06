@@ -1,10 +1,10 @@
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
-from api.v1.api_v1 import api_v1_router
-from core.settings import settings
+from app.api.v1.api_v1 import api_v1_router
+from app.core.settings import settings
 from fastapi import FastAPI
-from logs import setup_opentelemetry
+from app.logs import setup_opentelemetry
 
 
 @asynccontextmanager

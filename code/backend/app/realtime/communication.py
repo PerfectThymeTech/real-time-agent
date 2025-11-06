@@ -19,10 +19,10 @@ from agents.realtime.model_events import (
 )
 from agents.realtime.model_inputs import RealtimeModelSendRawMessage
 from agents.realtime.session import RealtimeSession
-from core.settings import settings
+from app.core.settings import settings
 from fastapi import WebSocket
-from logs import setup_logging
-from utils import _truncate_str
+from app.logs import setup_logging
+from app.utils import _truncate_str
 
 logger = setup_logging(__name__)
 

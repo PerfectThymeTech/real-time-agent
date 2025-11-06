@@ -1,13 +1,13 @@
 from typing import Any, Optional
 
-from calls.utils import (
+from app.calls.utils import (
     get_acs_client,
     process_callback_event,
     process_incoming_call_event,
 )
 from fastapi import APIRouter, Depends
-from logs import setup_logging
-from models.calls import ValidationResponse
+from app.logs import setup_logging
+from app.models.calls import ValidationResponse
 
 logger = setup_logging(__name__)
 

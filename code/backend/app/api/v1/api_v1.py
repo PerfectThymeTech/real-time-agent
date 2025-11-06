@@ -1,4 +1,4 @@
-from api.v1.endpoints import calls, heartbeat, realtime
+from app.api.v1.endpoints import calls, heartbeat, realtime
 from fastapi import APIRouter
 
 api_v1_router = APIRouter()

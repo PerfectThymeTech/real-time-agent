@@ -7,7 +7,7 @@ from azure.monitor.opentelemetry.exporter import (
     AzureMonitorMetricExporter,
     AzureMonitorTraceExporter,
 )
-from core.settings import settings
+from app.core.settings import settings
 from fastapi import FastAPI
 from opentelemetry import trace
 from opentelemetry._logs import set_logger_provider

@@ -2,10 +2,10 @@ import base64
 from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
-from calls.utils import get_acs_client
+from app.calls.utils import get_acs_client
 from fastapi import APIRouter, Depends, Header, WebSocket
-from logs import setup_logging
-from realtime.communication import CommunicationHandler
+from app.logs import setup_logging
+from app.realtime.communication import CommunicationHandler
 from starlette.websockets import WebSocketState
 
 logger = setup_logging(__name__)
