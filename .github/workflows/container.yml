@@ -1,0 +1,27 @@
+name: Container
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "code/backend/**"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "code/backend/**"
+
+jobs:
+  build_and_publish:
+    uses: ./.github/workflows/_containerTemplate.yml
+    name: "Build & Publish"
+    with:
+      environment: "dev"
+      working_directory: "./code/backend"
+      registry_uri: "ghcr.io"
+      image_namespace_name: "PerfectThymeTech"
+      image_name: "real-time-backend"
+    secrets:
+      USER_NAME: ${{ github.actor }}
+      PASSWORD: ${{ secrets.GITHUB_TOKEN }}
