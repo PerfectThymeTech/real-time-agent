@@ -1,10 +1,10 @@
 from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
-from calls.process import get_acs_client
+from app.calls.process import get_acs_client
+from app.logs import setup_logging
+from app.realtime.communication import CommunicationHandler
 from fastapi import APIRouter, Depends, Header, WebSocket
-from logs import setup_logging
-from realtime.communication import CommunicationHandler
 
 logger = setup_logging(__name__)
 

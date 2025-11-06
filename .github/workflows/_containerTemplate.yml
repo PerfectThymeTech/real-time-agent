@@ -1,0 +1,119 @@
+name: Container Template
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        default: "dev"
+        description: "Specifies the environment of the deployment."
+      working_directory:
+        required: false
+        type: string
+        default: ./code/function
+        description: "Specifies the uri of the container registry."
+      registry_uri:
+        required: false
+        type: string
+        default: ghcr.io
+        description: "Specifies the uri of the container registry."
+      image_namespace_name:
+        required: true
+        type: string
+        description: "Specifies the namespace name of the image."
+      image_name:
+        required: true
+        type: string
+        description: "Specifies the name of the image."
+    secrets:
+      USER_NAME:
+        required: true
+        description: "Specifies the user name for the container registry."
+      PASSWORD:
+        required: true
+        description: "Specifies the password for the container registry."
+
+jobs:
+  deployment:
+    name: Container Build & Push
+    runs-on: [ubuntu-latest]
+    continue-on-error: false
+    environment: ${{ inputs.environment }}
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      # Check Out Repository
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      # Install cosign
+      - name: Install cosign
+        id: install_cosign
+        uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+        if: github.event_name != 'pull_request'
+        with:
+          cosign-release: 'v2.2.0'
+
+      # Install QEMU
+      - name: Set up QEMU
+        id: install_qemu
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
+
+      # Install BuildKit
+      - name: Install Buildx
+        id: install_buildx
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+
+      # Login Container Registry
+      - name: Login Container Registry
+        id: registry_login
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ${{ inputs.registry_uri }}
+          username: ${{ secrets.USER_NAME }}
+          password: ${{ secrets.PASSWORD }}
+
+      # Extract Metadata (tags, labels)
+      - name: Extract Metadata
+        id: metadata
+        uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
+        with:
+          context: workflow
+          images: |
+            ${{ inputs.registry_uri }}/${{ inputs.image_namespace_name }}/${{ inputs.image_name }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      # Build and Push Docker Image with Buildx
+      - name: Build and push Docker image
+        id: build_push
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        with:
+          context: ${{ inputs.working_directory }}
+          file: ${{ inputs.working_directory }}/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Sign container image
+      # This step uses the identity token to provision an ephemeral certificate against the sigstore community Fulcio instance.
+      - name: Sign container image
+        id: sign
+        if: github.event_name == 'release'
+        run: |
+          cosign sign --yes "${TAGS}@${DIGEST}"
+        env:
+          TAGS: ${{ steps.metadata.outputs.tags }}
+          DIGEST: ${{ steps.build_push.outputs.digest }}

@@ -2,9 +2,9 @@ import base64
 from hashlib import sha256
 from typing import Annotated
 
-from core.settings import settings
+from app.core.settings import settings
+from app.logs import setup_logging
 from fastapi import Header, HTTPException
-from logs import setup_logging
 
 logger = setup_logging(__name__)
 
