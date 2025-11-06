@@ -1,7 +1,7 @@
 import logging
 
 from pydantic import AliasChoices, Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -28,11 +28,13 @@ class Settings(BaseSettings):
     # Open AI settings
     INSTRUCTIONS: str
     REALTIME_MODEL_NAME: str = Field(
-        ..., alias=AliasChoices("REALTIME_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME")
+        default="gpt-realtime", alias=AliasChoices("REALTIME_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME"),
     )
     TRANSCRIPTION_MODEL_NAME: str = "gpt-4o-transcribe"
     AZURE_OPENAI_API_KEY: str
     AZURE_OPENAI_ENDPOINT: str
+
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
 settings = Settings()
