@@ -1,5 +1,5 @@
 
-FROM ghcr.io/astral-sh/uv:0.0.7-python3.13-bookworm-slim
+FROM ghcr.io/astral-sh/uv:0.9.7-python3.13-bookworm-slim
 
 # Setup a non-root user
 RUN groupadd --system --gid 999 nonroot \
