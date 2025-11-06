@@ -1,8 +1,13 @@
-from typing import Any
+from typing import Optional
 
-from calls.utils import get_acs_client
+from calls.process import (
+    get_acs_client,
+    process_callback_event,
+    process_incoming_call_event,
+)
 from fastapi import APIRouter, Depends
-from utils import setup_logging
+from logs import setup_logging
+from models.calls import ValidationResponse
 
 logger = setup_logging(__name__)
 
@@ -12,22 +17,31 @@ router = APIRouter()
 @router.post(
     path="/incoming",
     name="IncomingCall",
-    # dependencies=[Depends(TODO)],
+    dependencies=[Depends(get_acs_client)],
 )
 async def post_incoming_call(
     events: list[dict], acs_client=Depends(get_acs_client)
-) -> Any:
+) -> Optional[ValidationResponse]:
+    """
+    Receives incoming call events from Azure Communication Services.
+    """
     logger.info("Received Incoming Call Event")
-    pass
+    result = process_incoming_call_event(events=events, client=acs_client)
+
+    if result:
+        return result
 
 
 @router.post(
     path="/callbacks/{contextId}",
     name="CallbackContext",
-    # dependencies=[Depends(TODO)],
+    dependencies=[Depends(get_acs_client)],
 )
 async def post_callback_context(
     contextId: str, events: list[dict], acs_client=Depends(get_acs_client)
-) -> Any:
+) -> None:
+    """
+    Receives callback events for a call from Azure Communication Services.
+    """
     logger.info("Received Callback Context Event for a Call")
-    pass
+    await process_callback_event(context_id=contextId, events=events, client=acs_client)
