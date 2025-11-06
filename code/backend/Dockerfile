@@ -7,9 +7,6 @@ RUN groupadd --system --gid 999 nonroot \
 # Install the project into `/app`
 WORKDIR /app
 
-# UV commit hash for version 0.9.7
-ENV UV_VERSION=0adb444806e8bcea7e7a5e9ae90d1288778a0b54
-
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
 
@@ -19,8 +16,8 @@ ENV UV_LINK_MODE=copy
 # Ensure installed tools can be executed out of the box
 ENV UV_TOOL_BIN_DIR=/usr/local/bin
 
-# Install uv
-COPY --from=docker.io/astral/uv:$UV_VERSION /uv /uvx /bin/
+# Install uv (hash for version 0.9.7)
+COPY --from=docker.io/astral/uv:0adb444806e8bcea7e7a5e9ae90d1288778a0b54 /uv /uvx /bin/
 
 # Install the project's dependencies using the lockfile and settings
 RUN --mount=type=cache,target=/root/.cache/uv \
