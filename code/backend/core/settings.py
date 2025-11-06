@@ -28,7 +28,8 @@ class Settings(BaseSettings):
     # Open AI settings
     INSTRUCTIONS: str
     REALTIME_MODEL_NAME: str = Field(
-        default="gpt-realtime", alias=AliasChoices("REALTIME_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME"),
+        default="gpt-realtime",
+        alias=AliasChoices("REALTIME_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME"),
     )
     TRANSCRIPTION_MODEL_NAME: str = "gpt-4o-transcribe"
     AZURE_OPENAI_API_KEY: str
