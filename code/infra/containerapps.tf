@@ -42,13 +42,12 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_container_app_
       category_group = entry.value
     }
   }
-
-  dynamic "metric" {
+  dynamic "enabled_metric" {
+    
     iterator = entry
     for_each = data.azurerm_monitor_diagnostic_categories.diagnostic_categories_container_app_environment.metrics
     content {
       category = entry.value
-      enabled  = true
     }
   }
 }
