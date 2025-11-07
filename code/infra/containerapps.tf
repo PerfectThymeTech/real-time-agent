@@ -7,7 +7,7 @@ resource "azurerm_container_app_environment" "container_app_environment" {
   dapr_application_insights_connection_string = module.application_insights.application_insights_connection_string
   infrastructure_resource_group_name          = "${local.prefix}-cae001-rg"
   infrastructure_subnet_id                    = azapi_resource.subnet_container_app.id
-  internal_load_balancer_enabled              = true
+  internal_load_balancer_enabled              = false
   logs_destination                            = "azure-monitor"
   mutual_tls_enabled                          = false
   workload_profile {
