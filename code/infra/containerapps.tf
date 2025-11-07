@@ -118,15 +118,15 @@ resource "azurerm_container_app" "container_app_backend" {
         secret_name = "aoai-primary-access-key"
       }
       env {
-        name        = "REALTIME_MODEL_NAME"
+        name  = "REALTIME_MODEL_NAME"
         value = azurerm_cognitive_deployment.cognitive_deployment_gpt_realtime.name
       }
       env {
-        name        = "TRANSCRIPTION_MODEL_NAME"
+        name  = "TRANSCRIPTION_MODEL_NAME"
         value = azurerm_cognitive_deployment.cognitive_deployment_gpt_40_transcribe.name
       }
       env {
-        name        = "INSTRUCTIONS"
+        name  = "INSTRUCTIONS"
         value = "You are a customer service agent for Microsoft focused exclusively on Azure."
       }
     }
