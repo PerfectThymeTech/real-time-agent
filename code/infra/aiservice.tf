@@ -140,7 +140,7 @@ resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_realtime" {
   rai_policy_name = azurerm_cognitive_account_rai_policy.cognitive_account_rai_policy.name
   sku {
     name     = "GlobalStandard"
-    capacity = 100
+    capacity = 5
   }
   version_upgrade_option = "OnceCurrentVersionExpired"
 
@@ -161,7 +161,7 @@ resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_40_transcribe"
   rai_policy_name = azurerm_cognitive_account_rai_policy.cognitive_account_rai_policy.name
   sku {
     name     = "GlobalStandard"
-    capacity = 100
+    capacity = 5
   }
   version_upgrade_option = "OnceCurrentVersionExpired"
 
