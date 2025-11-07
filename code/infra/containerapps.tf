@@ -43,7 +43,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_container_app_
     }
   }
   dynamic "enabled_metric" {
-    
+
     iterator = entry
     for_each = data.azurerm_monitor_diagnostic_categories.diagnostic_categories_container_app_environment.metrics
     content {
@@ -116,6 +116,18 @@ resource "azurerm_container_app" "container_app_backend" {
       env {
         name        = "AZURE_OPENAI_API_KEY"
         secret_name = "aoai-primary-access-key"
+      }
+      env {
+        name        = "REALTIME_MODEL_NAME"
+        secret_name = azurerm_cognitive_deployment.cognitive_deployment_gpt_realtime.name
+      }
+      env {
+        name        = "TRANSCRIPTION_MODEL_NAME"
+        secret_name = azurerm_cognitive_deployment.cognitive_deployment_gpt_40_transcribe.name
+      }
+      env {
+        name        = "INSTRUCTIONS"
+        secret_name = "You are a customer service agent for Microsoft focused exclusively on Azure."
       }
     }
     http_scale_rule {
