@@ -23,6 +23,10 @@ resource "azurerm_key_vault_secret" "key_vault_secret_communication_service_prim
   name         = "acs-connection-string"
   content_type = "text/plain"
   value        = module.communication_service.communication_service_primary_connection_string
+
+  depends_on = [
+    module.key_vault.key_vault_setup_completed
+  ]
 }
 
 resource "azurerm_key_vault_secret" "key_vault_secret_application_insights_connection_string" {
@@ -31,6 +35,10 @@ resource "azurerm_key_vault_secret" "key_vault_secret_application_insights_conne
   name         = "ai-connection-string"
   content_type = "text/plain"
   value        = module.application_insights.application_insights_connection_string
+
+  depends_on = [
+    module.key_vault.key_vault_setup_completed
+  ]
 }
 
 resource "azurerm_key_vault_secret" "key_vault_secret_aoai_primary_access_key" {
@@ -39,4 +47,8 @@ resource "azurerm_key_vault_secret" "key_vault_secret_aoai_primary_access_key" {
   name         = "aoai-primary-access-key"
   content_type = "text/plain"
   value        = module.ai_service.cognitive_account_primary_access_key
+
+  depends_on = [
+    module.key_vault.key_vault_setup_completed
+  ]
 }
