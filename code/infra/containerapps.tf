@@ -162,7 +162,6 @@ resource "azurerm_container_app" "container_app_backend" {
     }
     min_replicas                     = 1
     max_replicas                     = 10
-    revision_suffix                  = "real-time-backend"
     termination_grace_period_seconds = 10
   }
   workload_profile_name = "Consumption"
