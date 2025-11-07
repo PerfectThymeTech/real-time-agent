@@ -42,8 +42,8 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_container_app_
       category_group = entry.value
     }
   }
-  dynamic "enabled_metric" {
 
+  dynamic "enabled_metric" {
     iterator = entry
     for_each = data.azurerm_monitor_diagnostic_categories.diagnostic_categories_container_app_environment.metrics
     content {
@@ -128,6 +128,32 @@ resource "azurerm_container_app" "container_app_backend" {
       env {
         name  = "INSTRUCTIONS"
         value = "You are a customer service agent for Microsoft focused exclusively on Azure."
+      }
+      liveness_probe {
+        failure_count_threshold = 3
+        header {
+          name  = "x-liveness"
+          value = "todo"
+        }
+        initial_delay    = 1
+        interval_seconds = 10
+        path             = "/v1/health/heartbeat"
+        port             = 80
+        timeout          = 1
+        transport        = "HTTP"
+      }
+      readiness_probe {
+        failure_count_threshold = 3
+        header {
+          name  = "x-liveness"
+          value = "todo"
+        }
+        initial_delay    = 0
+        interval_seconds = 10
+        path             = "/v1/health/heartbeat"
+        port             = 80
+        timeout          = 1
+        transport        = "HTTP"
       }
     }
     http_scale_rule {
