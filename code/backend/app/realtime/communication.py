@@ -73,7 +73,7 @@ class CommunicationHandler:
         # Create real time model config
         real_time_model_config = RealtimeModelConfig(
             api_key=settings.AZURE_OPENAI_API_KEY,
-            url=f"wss://{settings.AZURE_OPENAI_ENDPOINT}openai/v1/realtime?model={settings.REALTIME_MODEL_NAME}",
+            url=f"wss://{settings.AZURE_OPENAI_ENDPOINT.removeprefix('https://')}openai/v1/realtime?model={settings.REALTIME_MODEL_NAME}",
         )
 
         # Create real time session
