@@ -119,15 +119,15 @@ resource "azurerm_container_app" "container_app_backend" {
       }
       env {
         name        = "REALTIME_MODEL_NAME"
-        secret_name = azurerm_cognitive_deployment.cognitive_deployment_gpt_realtime.name
+        value = azurerm_cognitive_deployment.cognitive_deployment_gpt_realtime.name
       }
       env {
         name        = "TRANSCRIPTION_MODEL_NAME"
-        secret_name = azurerm_cognitive_deployment.cognitive_deployment_gpt_40_transcribe.name
+        value = azurerm_cognitive_deployment.cognitive_deployment_gpt_40_transcribe.name
       }
       env {
         name        = "INSTRUCTIONS"
-        secret_name = "You are a customer service agent for Microsoft focused exclusively on Azure."
+        value = "You are a customer service agent for Microsoft focused exclusively on Azure."
       }
     }
     http_scale_rule {
