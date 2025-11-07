@@ -55,7 +55,6 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_container_app_
 
 resource "azurerm_container_app" "container_app_backend" {
   name                = "${local.prefix}-ca001-backend"
-  location            = var.location
   resource_group_name = azurerm_resource_group.resource_group.name
   tags                = var.tags
   identity {
