@@ -56,7 +56,7 @@ jobs:
       - name: Install cosign
         id: install_cosign
         uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
-        # if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         with:
           cosign-release: 'v2.2.0'
 
@@ -74,7 +74,7 @@ jobs:
       - name: Login Container Registry
         id: registry_login
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
-        # if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         with:
           registry: ${{ inputs.registry_uri }}
           username: ${{ secrets.USER_NAME }}
@@ -101,7 +101,7 @@ jobs:
         with:
           context: ${{ inputs.working_directory }}
           file: ${{ inputs.working_directory }}/Dockerfile
-          push: true # ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha
