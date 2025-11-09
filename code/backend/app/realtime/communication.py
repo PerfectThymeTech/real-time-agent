@@ -73,7 +73,7 @@ class CommunicationHandler:
         # Create real time model config
         real_time_model_config = RealtimeModelConfig(
             api_key=settings.AZURE_OPENAI_API_KEY,
-            url=f"wss://{settings.AZURE_OPENAI_ENDPOINT}openai/v1/realtime?model={settings.REALTIME_MODEL_NAME}",
+            url=f"wss://{settings.AZURE_OPENAI_ENDPOINT.removeprefix('https://')}openai/v1/realtime?model={settings.REALTIME_MODEL_NAME}",
         )
 
         # Create real time session
@@ -123,7 +123,7 @@ class CommunicationHandler:
             # Collect websocket messages
             websocket_data = await self.websocket.receive_json()
 
-            match websocket_data.get("type", None):
+            match websocket_data.get("kind", None):
                 case "AudioData":
                     logger.info("Received audio data over WebSocket")
 
@@ -141,7 +141,7 @@ class CommunicationHandler:
 
                 case _:
                     logger.warning(
-                        f"Unknown data type received over WebSocket: {websocket_data.get('type', None)}"
+                        f"Unknown data kind received over WebSocket: {websocket_data.get('kind', None)}"
                     )
 
     async def return_audio(self, audio: bytes):

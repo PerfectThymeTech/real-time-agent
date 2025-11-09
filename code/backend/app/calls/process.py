@@ -129,10 +129,9 @@ async def process_callback_event(
                 )
 
                 # Get call connection properties
-                call_connection = client.get_call_connection(
+                call_properties = await client.get_call_connection(
                     call_connection_id=event_data.get("callConnectionId")
-                )
-                call_properties = await call_connection.get_call_properties()
+                ).get_call_properties()
                 logger.info(
                     f"MediaStreamingSubscription: {getattr(call_properties, 'media_streaming_subscription', 'N/A')}"
                 )

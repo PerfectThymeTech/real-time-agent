@@ -1,9 +1,10 @@
 
 FROM ghcr.io/astral-sh/uv:0.9.7-python3.13-bookworm-slim
 
+# TODO: Enable non-root user
 # Setup a non-root user
-RUN groupadd --system --gid 999 nonroot \
- && useradd --system --gid 999 --uid 999 --create-home nonroot
+# RUN groupadd --system --gid 999 nonroot \
+#  && useradd --system --gid 999 --uid 999 --create-home nonroot
 
 # Install the project into `/app`
 WORKDIR /app
@@ -34,8 +35,9 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Reset the entrypoint in order to not invoke `uv`
 ENTRYPOINT []
 
+# TODO: Enable non-root user
 # Use the non-root user to run the application
-USER nonroot
+# USER nonroot
 
 # Run the application
 CMD ["fastapi", "run", "app/app.py", "--port", "80"]
