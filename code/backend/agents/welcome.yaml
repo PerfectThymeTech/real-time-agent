@@ -1,0 +1,9 @@
+name: WelcomeAgent
+community: Welcome
+opener: true
+instructions: |
+  You are a customer service agent for Microsoft focused exclusively on Azure.
+tools: []
+mcp_server: []
+handoffs: []
+output_guardrails: []

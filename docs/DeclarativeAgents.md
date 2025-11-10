@@ -20,93 +20,87 @@ The declarative configuration is typically done using YAML or JSON files and mus
 A sample declarative configuration in YAML format is shown below:
 
 ```yaml
-agent:
-  name: "CustomerSupportAgent"
-  community: "CustomerSupport"
-  task: "Assist customers with product inquiries and support issues."
-  tools:
-    - name: "ProductInfoAPI"
-      description: "Fetch product information from the database."
-      input_parameters:
-        - product_id: "string"
-      output: "Product details in JSON format."
-    - name: "SupportTicketAPI"
-      description: "Create and manage support tickets."
-      input_parameters:
-        - customer_id: "string"
-        - issue_description: "string"
-      output: "Ticket ID and status."
-  instructions:
-    system_message: |
-      You are a helpful customer support agent. Your task is to assist customers with their inquiries and support issues.
-    user_message_template: |
-      Customer Query: {user_query}
-      Available Tools: {tools_list}
-      Please provide a response based on the customer's query and available tools.
-  conversation_flows:
-    - state: "Greeting"
-      description: "Initial greeting and understanding user intent."
-      instructions: [
-        "Greet the user and ask how you can assist them today."
-      ]
-      examples: [
-        "Hello! How can I assist you today?",
-        "Hi there! What can I help you with?"
-      ]
-      transitions:
-        - condition: "ProductInquiry"
-          next_state: "ProductInfo"
-        - condition: "SupportIssue"
-          next_state: "SupportTicket"
-    - state: "ProductInfo"
-      prompt: "Please provide the product ID you would like information about."
-      transitions:
-        - user_provides_product_id:
-            next_state: "FetchProductInfo"
-    - state: "FetchProductInfo"
-      description: "Fetch product information from the database."
-      instructions: [
-        "Call ProductInfoAPI with provided product_id",
-        "Provide the product details to the user"
-      ]
-      examples: [
-        "The product details are as follows: {product_details}"
-      ]
-      transitions:
-        - condition: "ProductDetailsProvided"
-          next_state: "EndConversation"
-        - condition: "UserNeedsMoreInfo"
-          next_state: "ProductInfo"
-    - state: "SupportTicket"
-      description: "Assist the user with creating a support ticket."
-      instructions: [
-        "Ask the user for their customer ID and a description of the issue they are facing."
-      ]
-      examples: [
-        "Can you please provide your customer ID and describe the issue you're facing?"
-      ]
-      transitions:
-        - condition: "UserProvidesCustomerID"
-          next_state: "CreateSupportTicket"
-    - state: "CreateSupportTicket"
-      description: "Create a support ticket using the SupportTicketAPI."
-      instructions: [
-        "Call SupportTicketAPI with customer_id and issue_description"
-      ]
-      examples: [
-        "Your support ticket has been created. The ticket ID is {ticket_id}."
-      ]
-      transitions:
-        - condition: "UserSatisfied"
-          next_state: "EndConversation"
-        - condition: "UserNeedsMoreHelp"
-          next_state: "SupportTicket"
-    - state: "{end_conversation_state}"
-  transition_states:
-    - community: "Sales"
-      condition: "user_intent == 'PurchaseInquiry'"
-    - community: "TechnicalSupport"
-      condition: "user_intent == 'TechnicalIssue'"
+name: "CustomerSupportAgent"
+community: "CustomerSupport"
+task: "Assist customers with product inquiries and support issues."
+tools:
+  - name: "ProductInfoAPI"
+    description: "Fetch product information from the database."
+    input_parameters:
+      - product_id: "string"
+    output: "Product details in JSON format."
+  - name: "SupportTicketAPI"
+    description: "Create and manage support tickets."
+    input_parameters:
+      - customer_id: "string"
+      - issue_description: "string"
+    output: "Ticket ID and status."
+instructions: |
+    You are a helpful customer support agent. Your task is to assist customers with their inquiries and support issues.
+conversation_flows:
+  - state: "Greeting"
+    description: "Initial greeting and understanding user intent."
+    instructions: [
+      "Greet the user and ask how you can assist them today."
+    ]
+    examples: [
+      "Hello! How can I assist you today?",
+      "Hi there! What can I help you with?"
+    ]
+    transitions:
+      - condition: "ProductInquiry"
+        next_state: "ProductInfo"
+      - condition: "SupportIssue"
+        next_state: "SupportTicket"
+  - state: "ProductInfo"
+    prompt: "Please provide the product ID you would like information about."
+    transitions:
+      - user_provides_product_id:
+          next_state: "FetchProductInfo"
+  - state: "FetchProductInfo"
+    description: "Fetch product information from the database."
+    instructions: [
+      "Call ProductInfoAPI with provided product_id",
+      "Provide the product details to the user"
+    ]
+    examples: [
+      "The product details are as follows: {product_details}"
+    ]
+    transitions:
+      - condition: "ProductDetailsProvided"
+        next_state: "EndConversation"
+      - condition: "UserNeedsMoreInfo"
+        next_state: "ProductInfo"
+  - state: "SupportTicket"
+    description: "Assist the user with creating a support ticket."
+    instructions: [
+      "Ask the user for their customer ID and a description of the issue they are facing."
+    ]
+    examples: [
+      "Can you please provide your customer ID and describe the issue you're facing?"
+    ]
+    transitions:
+      - condition: "UserProvidesCustomerID"
+        next_state: "CreateSupportTicket"
+  - state: "CreateSupportTicket"
+    description: "Create a support ticket using the SupportTicketAPI."
+    instructions: [
+      "Call SupportTicketAPI with customer_id and issue_description"
+    ]
+    examples: [
+      "Your support ticket has been created. The ticket ID is {ticket_id}."
+    ]
+    transitions:
+      - condition: "UserSatisfied"
+        next_state: "EndConversation"
+      - condition: "UserNeedsMoreHelp"
+        next_state: "SupportTicket"
+  - state: "{end_conversation_state}"
+transition_states:
+  - community: "Sales"
+    condition: "user_intent == 'PurchaseInquiry'"
+  - community: "TechnicalSupport"
+    condition: "user_intent == 'TechnicalIssue'"
 ```
 
 ### Domain-Specific Language (DSL) for Agents and Workflows

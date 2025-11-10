@@ -16,6 +16,7 @@ from agents.realtime.model_events import (
 from app.core.settings import settings
 from app.logs import setup_logging
 from app.utils import _truncate_str
+from app.realtime.agentmanager import AgentManager
 from fastapi import WebSocket
 from starlette.websockets import WebSocketState
 
@@ -28,6 +29,7 @@ class CommunicationHandler:
         Initialize the communication handler.
         """
         self.websocket = websocket
+        self.agent_manager = AgentManager(agent_directory=settings.AGENT_DIRECTORY)
 
     async def init_model_realtime_session(self):
         """

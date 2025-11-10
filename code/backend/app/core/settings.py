@@ -26,7 +26,6 @@ class Settings(BaseSettings):
     APPLICATIONINSIGHTS_CONNECTION_STRING: str = None
 
     # Open AI settings
-    INSTRUCTIONS: str
     REALTIME_MODEL_NAME: str = Field(
         default="gpt-realtime",
         alias=AliasChoices("REALTIME_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME"),
@@ -34,6 +33,9 @@ class Settings(BaseSettings):
     TRANSCRIPTION_MODEL_NAME: str = "gpt-4o-transcribe"
     AZURE_OPENAI_API_KEY: str
     AZURE_OPENAI_ENDPOINT: str
+
+    # Agent settings
+    AGENT_DIRECTORY: str = "./agents"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
