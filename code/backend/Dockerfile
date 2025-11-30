@@ -1,5 +1,5 @@
 
-FROM ghcr.io/astral-sh/uv:0.9.8-python3.13-bookworm-slim
+FROM ghcr.io/astral-sh/uv:0.9.13-python3.13-bookworm-slim
 
 # TODO: Enable non-root user
 # Setup a non-root user
