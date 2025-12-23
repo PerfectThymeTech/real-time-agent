@@ -8,7 +8,7 @@ tags = {
 }
 
 # Service variables
-container_image_reference           = "todo"
+container_image_reference           = "ghcr.io/perfectthymetech/real-time-backend:main"
 communication_service_data_location = "Europe"
 
 # HA/DR variables
