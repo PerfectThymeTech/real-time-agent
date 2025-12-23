@@ -66,7 +66,7 @@ resource "azurerm_container_app" "container_app_backend" {
   container_app_environment_id = azurerm_container_app_environment.container_app_environment.id
   ingress {
     allow_insecure_connections = false
-    client_certificate_mode    = "accept"
+    client_certificate_mode    = "ignore"
     external_enabled           = true
     # ip_security_restriction {
 
@@ -100,7 +100,7 @@ resource "azurerm_container_app" "container_app_backend" {
       name   = "real-time-backend"
       image  = var.container_image_reference
       cpu    = 0.5
-      memory = "1.0Gi"
+      memory = "1Gi"
       env {
         name        = "ACS_CONNECTION_STRING"
         secret_name = "acs-connection-string"
