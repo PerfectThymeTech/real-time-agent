@@ -11,10 +11,6 @@ resource "azurerm_container_app_environment" "container_app_environment" {
   logs_destination                            = "azure-monitor"
   mutual_tls_enabled                          = false
   workload_profile {
-    name                  = "Consumption"
-    workload_profile_type = "Consumption"
-  }
-  workload_profile {
     name                  = local.container_app_environment_workload_profile_name
     workload_profile_type = "D4"
     minimum_count         = 1
