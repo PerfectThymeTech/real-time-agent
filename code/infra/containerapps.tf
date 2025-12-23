@@ -14,12 +14,12 @@ resource "azurerm_container_app_environment" "container_app_environment" {
     name                  = "Consumption"
     workload_profile_type = "Consumption"
   }
-  # workload_profile {
-  #   name                  = "D4"
-  #   workload_profile_type = "D4"
-  #   minimum_count         = 1
-  #   maximum_count         = 3
-  # }
+  workload_profile {
+    name                  = local.container_app_environment_workload_profile_name
+    workload_profile_type = "D4"
+    minimum_count         = 1
+    maximum_count         = 3
+  }
   zone_redundancy_enabled = var.zone_redundancy_enabled
 }
 
@@ -164,5 +164,5 @@ resource "azurerm_container_app" "container_app_backend" {
     max_replicas                     = 10
     termination_grace_period_seconds = 10
   }
-  workload_profile_name = "Consumption"
+  workload_profile_name = local.container_app_environment_workload_profile_name
 }
