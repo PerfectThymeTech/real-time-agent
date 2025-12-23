@@ -129,7 +129,7 @@ async def process_callback_event(
                 )
 
                 # Get call connection properties
-                call_properties = await client.get_call_connection(
+                call_properties = client.get_call_connection(
                     call_connection_id=event_data.get("callConnectionId")
                 ).get_call_properties()
                 logger.info(
