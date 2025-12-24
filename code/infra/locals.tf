@@ -11,6 +11,7 @@ locals {
     "Microsoft.Network",
     "Microsoft.Resources",
   ]
+  container_app_environment_workload_profile_name = "D4"
 
   # Resource locals
   virtual_network = {
