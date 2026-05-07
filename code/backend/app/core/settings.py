@@ -7,6 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     # General settings
     PROJECT_NAME: str = "RealTimeBackend"
+    PROJECT_DESCRIPTION: str = "Backend API for Real-Time Agent"
     SERVER_NAME: str = "RealTimeBackend"
     APP_VERSION: str = "v0.1.0"
     API_V1_STR: str = "/v1"

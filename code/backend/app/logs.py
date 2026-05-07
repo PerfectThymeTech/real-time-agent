@@ -1,33 +1,24 @@
 import logging
 
 from app.core.settings import settings
-from azure.monitor.opentelemetry.exporter import (
-    ApplicationInsightsSampler,
-    AzureMonitorLogExporter,
-    AzureMonitorMetricExporter,
-    AzureMonitorTraceExporter,
-)
 from fastapi import FastAPI
 from opentelemetry import trace
-from opentelemetry._logs import set_logger_provider
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from azure.identity import DefaultAzureCredential
+from azure.monitor.opentelemetry import configure_azure_monitor
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 from opentelemetry.instrumentation.system_metrics import SystemMetricsInstrumentor
-from opentelemetry.metrics import set_meter_provider
-from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
-from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
-from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+from opentelemetry.instrumentation.openai_agents import OpenAIAgentsInstrumentor
 from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.trace import Tracer, set_tracer_provider
+from opentelemetry.trace import Tracer
 
 
 def setup_logging(module) -> logging.Logger:
     """Setup logging and event handler.
 
-    RETURNS (Logger): The logger object to log activities.
+    :param module: The module for which the logger is being set up.
+    :type module: str
+    :returns: The logger object to log activities.
+    :rtype: logging.Logger
     """
     logger = logging.getLogger(module)
     logger.setLevel(settings.LOGGING_LEVEL)
@@ -42,17 +33,20 @@ def setup_logging(module) -> logging.Logger:
 def setup_tracer(module) -> Tracer:
     """Setup tracer and event handler.
 
-    RETURNS (Tracer): The tracer object to create spans.
+    :param module: The module for which the tracer is being set up.
+    :type module: str
+    :returns: The tracer object to trace activities.
+    :rtype: Tracer
     """
     tracer = trace.get_tracer(module)
     return tracer
 
 
-def setup_opentelemetry(app: FastAPI):
+def setup_opentelemetry():
     """Setup tracer for Open Telemetry.
 
-    app (FastAPI): The app to be instrumented by Open Telemetry.
-    RETURNS (None): Nothing is being returned.
+    :returns: None
+    :rtype: None
     """
     # Configure basic logging configuration
     stream_handler = logging.StreamHandler()
@@ -63,79 +57,53 @@ def setup_opentelemetry(app: FastAPI):
         level=settings.LOGGING_LEVEL,
     )
 
-    if settings.APPLICATIONINSIGHTS_CONNECTION_STRING:
-        # credential = ManagedIdentityCredential()
-        resource = Resource.create(
-            {
-                "service.name": settings.SERVER_NAME,
-                "service.namespace": settings.SERVER_NAME,
-                "service.version": settings.APP_VERSION,
-                # "service.instance.id": settings.INSTANCE_ID,
-            }
+    if settings.APPLICATIONINSIGHTS_AUTHENTICATION_STRING:
+        credential = DefaultAzureCredential(
+            managed_identity_client_id=settings.MANAGED_IDENTITY_CLIENT_ID,
         )
+    else:
+        credential = None
 
-        # Create logger provider
-        logger_exporter = AzureMonitorLogExporter(
-            connection_string=settings.APPLICATIONINSIGHTS_CONNECTION_STRING,
-            # credential=credential,
-        )
-        logger_provider = LoggerProvider(resource=resource)
-        logger_provider.add_log_record_processor(
-            BatchLogRecordProcessor(
-                exporter=logger_exporter,
-                schedule_delay_millis=settings.LOGGING_SCHEDULE_DELAY,
-            )
-        )
-        set_logger_provider(logger_provider)
-        handler = LoggingHandler(
-            level=settings.LOGGING_LEVEL, logger_provider=logger_provider
-        )
-        logging.getLogger().addHandler(handler)
-
-        # Create tracer provider
-        tracer_exporter = AzureMonitorTraceExporter(
-            connection_string=settings.APPLICATIONINSIGHTS_CONNECTION_STRING,
-            # credential=credential,
-        )
-        sampler = ApplicationInsightsSampler(
-            sampling_ratio=settings.LOGGING_SAMPLING_RATIO
-        )
-        tracer_provider = TracerProvider(resource=resource, sampler=sampler)
-        tracer_provider.add_span_processor(
-            BatchSpanProcessor(
-                span_exporter=tracer_exporter,
-                schedule_delay_millis=settings.LOGGING_SCHEDULE_DELAY,
-            )
-        )
-        set_tracer_provider(tracer_provider)
-
-        # Create meter provider
-        metrics_exporter = AzureMonitorMetricExporter(
-            connection_string=settings.APPLICATIONINSIGHTS_CONNECTION_STRING,
-            # credential=credential,
-        )
-        reader = PeriodicExportingMetricReader(
-            exporter=metrics_exporter,
-            export_interval_millis=settings.LOGGING_SCHEDULE_DELAY,
-        )
-        meter_provider = MeterProvider(metric_readers=[reader], resource=resource)
-        set_meter_provider(meter_provider)
-
-        # Configure custom metrics
-        system_metrics_config = {
-            "system.memory.usage": ["used", "free", "cached"],
-            "system.cpu.time": ["idle", "user", "system", "irq"],
-            "system.network.io": ["transmit", "receive"],
-            "process.runtime.memory": ["rss", "vms"],
-            "process.runtime.cpu.time": ["user", "system"],
+    # Create OTEL resource
+    resource = Resource.create(
+        attributes={
+            "service.name": settings.WEBSITE_NAME,
+            "service.namespace": settings.WEBSITE_NAME,
+            "service.instance.id": settings.WEBSITE_INSTANCE_ID,
         }
+    )
 
-        # Create instrumenter
-        FastAPIInstrumentor.instrument_app(
-            app,
-            excluded_urls=f".*.in.applicationinsights.azure.com/.*,{settings.API_V1_STR}/health/heartbeat",
-            tracer_provider=tracer_provider,
-            meter_provider=meter_provider,
-        )
-        HTTPXClientInstrumentor().instrument()
-        SystemMetricsInstrumentor(config=system_metrics_config).instrument()
+    # Configure azure monitor
+    configure_azure_monitor(
+        credential=credential,
+        connection_string=settings.APPLICATIONINSIGHTS_CONNECTION_STRING,
+        enable_live_metrics=True,
+        enable_performance_counters=True,
+        enable_trace_based_sampling_for_logs=False,
+        instrumentation_options={
+            "azure_sdk": {"enabled": True},
+            "django": {"enabled": False},
+            "fastapi": {"enabled": True},
+            "flask": {"enabled": False},
+            "psycopg2": {"enabled": False},
+            "requests": {"enabled": False},
+            "urllib": {"enabled": False},
+            "urllib3": {"enabled": False},
+        },
+        storage_directory=os.path.join(settings.HOME_DIRECTORY, "azure_monitor"),
+        resource=resource,
+    )
+
+    # Configure custom metrics
+    system_metrics_config = {
+        "system.memory.usage": ["used", "free", "cached"],
+        "system.cpu.time": ["idle", "user", "system", "irq"],
+        "system.network.io": ["transmit", "receive"],
+        "process.runtime.memory": ["rss", "vms"],
+        "process.runtime.cpu.time": ["user", "system"],
+    }
+
+    # Add additional instrumentations and configurations
+    OpenAIAgentsInstrumentor().instrument(tracer_provider=trace.get_tracer_provider())
+    HTTPXClientInstrumentor().instrument()
+    SystemMetricsInstrumentor(config=system_metrics_config).instrument()
