@@ -1,13 +1,12 @@
 import logging
 
 from app.core.settings import settings
-from fastapi import FastAPI
-from opentelemetry import trace
 from azure.identity import DefaultAzureCredential
 from azure.monitor.opentelemetry import configure_azure_monitor
+from opentelemetry import trace
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
-from opentelemetry.instrumentation.system_metrics import SystemMetricsInstrumentor
 from opentelemetry.instrumentation.openai_agents import OpenAIAgentsInstrumentor
+from opentelemetry.instrumentation.system_metrics import SystemMetricsInstrumentor
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.trace import Tracer
 
