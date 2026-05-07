@@ -119,11 +119,11 @@ resource "azurerm_container_app" "container_app_backend" {
       }
       env {
         name  = "REALTIME_MODEL_NAME"
-        value = azurerm_cognitive_deployment.cognitive_deployment_gpt_realtime.name
+        value = azurerm_cognitive_deployment.cognitive_deployment_gpt_realtime_2.name
       }
       env {
         name  = "TRANSCRIPTION_MODEL_NAME"
-        value = azurerm_cognitive_deployment.cognitive_deployment_gpt_40_transcribe.name
+        value = azurerm_cognitive_deployment.cognitive_deployment_gpt_realtime_whisper.name
       }
       env {
         name  = "INSTRUCTIONS"
