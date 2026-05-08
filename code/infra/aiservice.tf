@@ -135,7 +135,7 @@ resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_realtime_2" {
   model {
     format  = "OpenAI"
     name    = "gpt-realtime-1.5" # "gpt-realtime-2"
-    version = "2026-02-23" # "2026-05-06"
+    version = "2026-02-23"       # "2026-05-06"
   }
   rai_policy_name = azurerm_cognitive_account_rai_policy.cognitive_account_rai_policy.name
   sku {
@@ -156,7 +156,7 @@ resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_realtime_whisp
   model {
     format  = "OpenAI"
     name    = "gpt-4o-transcribe-diarize" # "gpt-realtime-whisper"
-    version = "2025-10-15" # "2026-05-06"
+    version = "2025-10-15"                # "2026-05-06"
   }
   rai_policy_name = azurerm_cognitive_account_rai_policy.cognitive_account_rai_policy.name
   sku {

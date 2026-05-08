@@ -51,7 +51,9 @@ class Settings(BaseSettings):
     )
     TRANSCRIPTION_MODEL_NAME: str = Field(
         default="gpt-realtime-whisper",
-        alias=AliasChoices("TRANSCRIPTION_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME_TRANSCRIPTION"),
+        alias=AliasChoices(
+            "TRANSCRIPTION_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME_TRANSCRIPTION"
+        ),
     )
     INSTRUCTIONS: str
 
