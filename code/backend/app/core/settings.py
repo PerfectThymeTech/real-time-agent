@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     LOGGING_SCHEDULE_DELAY: int = 5000
     LOGGING_FORMAT: str = "[%(asctime)s] [%(levelname)s] [%(module)-8.8s] %(message)s"
     APPLICATIONINSIGHTS_CONNECTION_STRING: str
-    APPLICATIONINSIGHTS_AUTHENTICATION_STRING: str = None
+    APPLICATIONINSIGHTS_AUTHENTICATION_STRING: str | None = None
 
     # Identity settings
     MANAGED_IDENTITY_CLIENT_ID: str = ""
