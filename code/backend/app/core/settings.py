@@ -13,10 +13,18 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/v1"
 
     # Deployment settings
-    APP_BASE_URL: str = Field(..., alias=AliasChoices("BASE_URL", "CONTAINER_APP_HOSTNAME"))
-    APP_CONTAINER_NAME: str = Field(..., alias=AliasChoices("CONTAINER_NAME", "CONTAINER_APP_NAME"))
-    APP_CONTAINER_REVISION: str = Field(..., alias=AliasChoices("CONTAINER_REVISION", "CONTAINER_APP_REVISION"))
-    APP_NAMESPACE: str = Field(..., alias=AliasChoices("NAMESPACE", "CONTAINER_APP_ENV_DNS_SUFFIX"))
+    APP_BASE_URL: str = Field(
+        ..., alias=AliasChoices("BASE_URL", "CONTAINER_APP_HOSTNAME")
+    )
+    APP_CONTAINER_NAME: str = Field(
+        ..., alias=AliasChoices("CONTAINER_NAME", "CONTAINER_APP_NAME")
+    )
+    APP_CONTAINER_REVISION: str = Field(
+        ..., alias=AliasChoices("CONTAINER_REVISION", "CONTAINER_APP_REVISION")
+    )
+    APP_NAMESPACE: str = Field(
+        ..., alias=AliasChoices("NAMESPACE", "CONTAINER_APP_ENV_DNS_SUFFIX")
+    )
     APP_HOME_DIRECTORY: str = "./"
 
     # Logging settings
