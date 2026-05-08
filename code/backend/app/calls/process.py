@@ -36,8 +36,8 @@ def process_incoming_call_event(
     Processes an incoming call event.
     """
     # Set callback base url
-    callback_events_uri_base = f"https://{settings.BASE_URL}/v1/calls/callbacks"
-    websocket_url = f"wss://{settings.BASE_URL}/v1/realtime/realtime"
+    callback_events_uri_base = f"https://{settings.APP_BASE_URL}/v1/calls/callbacks"
+    websocket_url = f"wss://{settings.APP_BASE_URL}/v1/realtime/realtime"
     logger.info(f"Setting callback events base URI to: {callback_events_uri_base}")
 
     for event in events:

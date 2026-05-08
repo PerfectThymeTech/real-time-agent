@@ -1,4 +1,5 @@
 import logging
+import os
 
 from app.core.settings import settings
 from azure.identity import DefaultAzureCredential
@@ -66,9 +67,9 @@ def setup_opentelemetry():
     # Create OTEL resource
     resource = Resource.create(
         attributes={
-            "service.name": settings.WEBSITE_NAME,
-            "service.namespace": settings.WEBSITE_NAME,
-            "service.instance.id": settings.WEBSITE_INSTANCE_ID,
+            "service.name": settings.APP_CONTAINER_NAME,
+            "service.namespace": settings.APP_NAMESPACE,
+            "service.instance.id": settings.APP_CONTAINER_REVISION,
         }
     )
 
@@ -89,7 +90,7 @@ def setup_opentelemetry():
             "urllib": {"enabled": False},
             "urllib3": {"enabled": False},
         },
-        storage_directory=os.path.join(settings.HOME_DIRECTORY, "azure_monitor"),
+        storage_directory=os.path.join(settings.APP_HOME_DIRECTORY, "azure_monitor"),
         resource=resource,
     )
 
