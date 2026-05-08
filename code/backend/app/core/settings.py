@@ -43,14 +43,17 @@ class Settings(BaseSettings):
     ACS_CONNECTION_STRING: str
 
     # Azure Open AI settings
-    INSTRUCTIONS: str
+    AZURE_OPENAI_ENDPOINT: str
+    AZURE_OPENAI_API_KEY: str
     REALTIME_MODEL_NAME: str = Field(
-        default="gpt-realtime",
+        default="gpt-realtime-2",
         alias=AliasChoices("REALTIME_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME"),
     )
-    TRANSCRIPTION_MODEL_NAME: str = "gpt-4o-transcribe"
-    AZURE_OPENAI_API_KEY: str
-    AZURE_OPENAI_ENDPOINT: str
+    TRANSCRIPTION_MODEL_NAME: str = Field(
+        default="gpt-realtime-whisper",
+        alias=AliasChoices("TRANSCRIPTION_MODEL_NAME", "AZURE_OPENAI_DEPLOYMENT_NAME_TRANSCRIPTION"),
+    )
+    INSTRUCTIONS: str
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
