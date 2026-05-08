@@ -130,6 +130,10 @@ resource "azurerm_container_app" "container_app_backend" {
         value = azurerm_cognitive_deployment.cognitive_deployment_gpt_realtime_whisper.name
       }
       env {
+        name  = "MANAGED_IDENTITY_CLIENT_ID"
+        value = module.user_assigned_identity.user_assigned_identity_client_id
+      }
+      env {
         name  = "INSTRUCTIONS"
         value = "You are a customer service agent for Microsoft focused exclusively on Azure."
       }
