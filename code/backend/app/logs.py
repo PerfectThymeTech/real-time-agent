@@ -92,6 +92,7 @@ def setup_opentelemetry():
         },
         storage_directory=os.path.join(settings.APP_HOME_DIRECTORY, "azure_monitor"),
         resource=resource,
+        sampling_ratio=settings.LOGGING_SAMPLING_RATIO,
     )
 
     # Configure custom metrics

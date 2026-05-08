@@ -14,16 +14,17 @@ class Settings(BaseSettings):
 
     # Deployment settings
     APP_BASE_URL: str = Field(
-        ..., alias=AliasChoices("BASE_URL", "CONTAINER_APP_HOSTNAME")
+        default="localhost", alias=AliasChoices("BASE_URL", "CONTAINER_APP_HOSTNAME")
     )
     APP_CONTAINER_NAME: str = Field(
-        ..., alias=AliasChoices("CONTAINER_NAME", "CONTAINER_APP_NAME")
+        default="local", alias=AliasChoices("CONTAINER_NAME", "CONTAINER_APP_NAME")
     )
     APP_CONTAINER_REVISION: str = Field(
-        ..., alias=AliasChoices("CONTAINER_REVISION", "CONTAINER_APP_REVISION")
+        default="local",
+        alias=AliasChoices("CONTAINER_REVISION", "CONTAINER_APP_REVISION"),
     )
     APP_NAMESPACE: str = Field(
-        ..., alias=AliasChoices("NAMESPACE", "CONTAINER_APP_ENV_DNS_SUFFIX")
+        default="local", alias=AliasChoices("NAMESPACE", "CONTAINER_APP_ENV_DNS_SUFFIX")
     )
     APP_HOME_DIRECTORY: str = "./"
 
@@ -31,7 +32,6 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     LOGGING_LEVEL: int = logging.INFO
     LOGGING_SAMPLING_RATIO: float = 1.0
-    LOGGING_SCHEDULE_DELAY: int = 5000
     LOGGING_FORMAT: str = "[%(asctime)s] [%(levelname)s] [%(module)-8.8s] %(message)s"
     APPLICATIONINSIGHTS_CONNECTION_STRING: str
     APPLICATIONINSIGHTS_AUTHENTICATION_STRING: str = None
