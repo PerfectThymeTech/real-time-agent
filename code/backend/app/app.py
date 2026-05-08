@@ -1,10 +1,12 @@
+import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from app.api.v1.api_v1 import api_v1_router
 from app.core.settings import settings
-from app.logs import setup_opentelemetry
-from fastapi import FastAPI
+from app.logs import setup_logging, setup_opentelemetry
+from fastapi import FastAPI, Request, Response
+from starlette.background import BackgroundTask
 
 
 @asynccontextmanager
@@ -39,3 +41,33 @@ def get_app() -> FastAPI:
 
 
 app = get_app()
+
+
+def log_info(req_headers, req_body, res_body):
+    logger = setup_logging(__name__)
+    logger.debug(f"Request Headers: {req_headers}")
+    logger.debug(f"Request Body: {req_body}")
+    logger.debug(f"Response Body: {res_body}")
+
+
+if settings.LOGGING_LEVEL == logging.DEBUG:
+
+    @app.middleware("http")
+    async def some_middleware(request: Request, call_next):
+        req_headers = request.headers
+        req_body = await request.body()
+        response = await call_next(request)
+
+        chunks = []
+        async for chunk in response.body_iterator:
+            chunks.append(chunk)
+        res_body = b"".join(chunks)
+
+        task = BackgroundTask(log_info, req_headers, req_body, res_body)
+        return Response(
+            content=res_body,
+            status_code=response.status_code,
+            headers=dict(response.headers),
+            media_type=response.media_type,
+            background=task,
+        )
