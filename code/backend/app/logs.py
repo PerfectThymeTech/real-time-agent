@@ -58,9 +58,11 @@ def setup_opentelemetry():
     )
 
     if settings.APPLICATIONINSIGHTS_AUTHENTICATION_STRING:
-        credential = DefaultAzureCredential(
-            managed_identity_client_id=settings.MANAGED_IDENTITY_CLIENT_ID,
-        )
+        credential_kwargs = {}
+        managed_identity_client_id = settings.MANAGED_IDENTITY_CLIENT_ID.strip()
+        if managed_identity_client_id:
+            credential_kwargs["managed_identity_client_id"] = managed_identity_client_id
+        credential = DefaultAzureCredential(**credential_kwargs)
     else:
         credential = None
 
