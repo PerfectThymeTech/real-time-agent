@@ -110,8 +110,8 @@ resource "azurerm_container_app" "container_app_backend" {
         secret_name = "ai-connection-string"
       }
       env {
-        name        = "APPLICATIONINSIGHTS_AUTHENTICATION_STRING"
-        secret_name = "Authorization=AAD;ClientId=${module.user_assigned_identity.user_assigned_identity_client_id}"
+        name  = "APPLICATIONINSIGHTS_AUTHENTICATION_STRING"
+        value = "Authorization=AAD;ClientId=${module.user_assigned_identity.user_assigned_identity_client_id}"
       }
       env {
         name  = "AZURE_OPENAI_ENDPOINT"
