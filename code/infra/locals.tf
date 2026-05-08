@@ -38,4 +38,7 @@ locals {
       storage_account_id         = ""
     }
   ]
+
+  # Container app locals
+  container_app_environment_workload_profile_name = "D4"
 }

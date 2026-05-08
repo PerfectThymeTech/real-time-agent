@@ -128,14 +128,14 @@ resource "azurerm_cognitive_account_rai_policy" "cognitive_account_rai_policy" {
   ]
 }
 
-resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_realtime" {
-  name                 = "gpt-realtime"
+resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_realtime_2" {
+  name                 = "gpt-realtime-2"
   cognitive_account_id = module.ai_service.cognitive_account_id
 
   model {
     format  = "OpenAI"
-    name    = "gpt-realtime"
-    version = "2025-08-28"
+    name    = "gpt-realtime-2"
+    version = "2026-05-06"
   }
   rai_policy_name = azurerm_cognitive_account_rai_policy.cognitive_account_rai_policy.name
   sku {
@@ -149,14 +149,14 @@ resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_realtime" {
   ]
 }
 
-resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_40_transcribe" {
-  name                 = "gpt-4o-transcribe"
+resource "azurerm_cognitive_deployment" "cognitive_deployment_gpt_realtime_whisper" {
+  name                 = "gpt-realtime-whisper"
   cognitive_account_id = module.ai_service.cognitive_account_id
 
   model {
     format  = "OpenAI"
-    name    = "gpt-4o-transcribe"
-    version = "2025-03-20"
+    name    = "gpt-realtime-whisper"
+    version = "2026-05-06"
   }
   rai_policy_name = azurerm_cognitive_account_rai_policy.cognitive_account_rai_policy.name
   sku {

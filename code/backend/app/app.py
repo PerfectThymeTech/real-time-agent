@@ -9,22 +9,26 @@ from fastapi import FastAPI
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """Gracefully start the application before the server reports readiness.
+
+    :param app: The FastAPI application instance.
+    :type app: FastAPI
+    :yields: Control back to the caller to start the server.
+    :rtype: AsyncGenerator[None, None]
     """
-    Gracefully start the application before the server reports readiness.
-    """
-    setup_opentelemetry(app=app)
+    setup_opentelemetry()
     yield
 
 
 def get_app() -> FastAPI:
-    """
-    Setup the Fast API server.
+    """Setup the Fast API server.
 
-    RETURNS (FastAPI): The FastAPI object to start the server.
+    :returns: The FastAPI object to start the server.
+    :rtype: FastAPI
     """
     app = FastAPI(
         title=settings.PROJECT_NAME,
-        description="",
+        description=settings.PROJECT_DESCRIPTION,
         version=settings.APP_VERSION,
         openapi_url="/openapi.json",
         debug=settings.DEBUG,
