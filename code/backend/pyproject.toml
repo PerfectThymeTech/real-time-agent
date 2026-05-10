@@ -13,7 +13,7 @@ dependencies = [
     "opentelemetry-instrumentation-httpx==0.60b0",
     "opentelemetry-instrumentation-openai-agents==0.60.0",
     "opentelemetry-instrumentation-system-metrics==0.60b0",
-    "pydantic-settings==2.14.0",
+    "pydantic-settings==2.14.1",
 ]
 
 [dependency-groups]
