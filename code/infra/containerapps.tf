@@ -137,6 +137,10 @@ resource "azurerm_container_app" "container_app_backend" {
         name  = "INSTRUCTIONS"
         value = "You are a customer service agent for Microsoft focused exclusively on Azure."
       }
+      env {
+        name  = "LOGGING_LEVEL"
+        value = "10"
+      }
       liveness_probe {
         failure_count_threshold = 3
         header {
