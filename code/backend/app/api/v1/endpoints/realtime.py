@@ -6,6 +6,10 @@ from app.logs import setup_logging
 from app.realtime.communication import CommunicationHandler
 from fastapi import APIRouter, Depends, Header, WebSocket, WebSocketDisconnect
 
+from app.calls.validate import validate_callback_authorization
+
+from app.core import settings
+
 logger = setup_logging(__name__)
 
 router = APIRouter()
@@ -18,9 +22,7 @@ router = APIRouter()
 )
 async def realtime(
     websocket: WebSocket,
-    call_connection_id: Annotated[
-        str | None, Header(alias="x-ms-call-connection-id")
-    ] = None,
+    authorization_header: Annotated[str | None, Header(alias="authorization")] = None,
     acs_client=Depends(get_acs_client),
 ) -> Any:
     """
@@ -31,10 +33,14 @@ async def realtime(
     # Accept the WebSocket connection
     await websocket.accept()
 
-    if not call_connection_id:
-        logger.warning(
-            "Missing x-ms-call-connection-id header indicates direct connection not coming through ACS."
-        )
+    # Validate the authorization header to ensure the request is coming from a trusted source
+    if not authorization_header or not validate_callback_authorization(
+        authorization_header=authorization_header,
+        acs_resource_id=settings.ACS_RESOURCE_ID,
+    ):
+        logger.warning("Unauthorized WebSocket connection attempt")
+        await websocket.close(code=1008, reason="Unauthorized")
+        return
 
     async with AsyncExitStack() as stack:
         # Create and init communication handler

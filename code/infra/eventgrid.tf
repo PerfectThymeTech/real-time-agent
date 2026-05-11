@@ -1,3 +1,5 @@
+resource "random_uuid" "uuid" {}
+
 resource "azurerm_eventgrid_system_topic" "eventgrid_system_topic" {
   name                = "${module.communication_service.communication_service_name}-egst001"
   resource_group_name = azurerm_resource_group.resource_group.name
@@ -23,7 +25,7 @@ resource "azurerm_eventgrid_system_topic_event_subscription" "eventgrid_system_t
     max_delivery_attempts = 30
   }
   webhook_endpoint {
-    url                               = "https://${azurerm_container_app.container_app_backend.ingress[0].fqdn}/v1/calls/incoming"
+    url                               = "https://${azurerm_container_app.container_app_backend.ingress[0].fqdn}/v1/calls/incoming?token=${random_uuid.uuid.result}"
     max_events_per_batch              = 1
     preferred_batch_size_in_kilobytes = 64
     # active_directory_tenant_id        = data.azurerm_client_config.current.tenant_id

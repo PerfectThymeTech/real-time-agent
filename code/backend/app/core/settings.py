@@ -41,6 +41,8 @@ class Settings(BaseSettings):
 
     # Azure Communication Services settings
     ACS_CONNECTION_STRING: str
+    ACS_RESOURCE_ID: str
+    ACS_TOKEN_QUERY: str
 
     # Azure Open AI settings
     AZURE_OPENAI_ENDPOINT: str

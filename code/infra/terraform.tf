@@ -14,6 +14,10 @@ terraform {
       source  = "hashicorp/time"
       version = "0.13.1"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.8.1"
+    }
   }
 
   backend "azurerm" {

@@ -106,6 +106,14 @@ resource "azurerm_container_app" "container_app_backend" {
         secret_name = "acs-connection-string"
       }
       env {
+        name  = "ACS_RESOURCE_ID"
+        value = data.azapi_resource.communication_service.properties.immutableResourceId
+      }
+      env {
+        name  = "ACS_TOKEN_QUERY"
+        value = random_uuid.uuid.result
+      }
+      env {
         name        = "APPLICATIONINSIGHTS_CONNECTION_STRING"
         secret_name = "ai-connection-string"
       }
@@ -139,7 +147,7 @@ resource "azurerm_container_app" "container_app_backend" {
       }
       env {
         name  = "LOGGING_LEVEL"
-        value = "10"
+        value = "20"
       }
       liveness_probe {
         failure_count_threshold = 3

@@ -1,13 +1,15 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from app.calls.process import (
     get_acs_client,
     process_callback_event,
     process_incoming_call_event,
 )
+from app.calls.validate import validate_callback_authorization, validate_incoming_call_authorization
+from app.core import settings
 from app.logs import setup_logging
 from app.models.calls import ValidationResponse
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 
 logger = setup_logging(__name__)
 
@@ -20,12 +22,24 @@ router = APIRouter()
     dependencies=[Depends(get_acs_client)],
 )
 async def post_incoming_call(
-    events: list[dict], acs_client=Depends(get_acs_client)
+    events: list[dict], acs_client=Depends(get_acs_client),
+    token_query: Annotated[str | None, Query(alias="token")] = None,
 ) -> Optional[ValidationResponse]:
     """
     Receives incoming call events from Azure Communication Services.
     """
     logger.info("Received Incoming Call Event")
+    logger.debug(f"Received token: {token_query}")
+
+    # Validate the token query parameter to ensure the request is coming from a trusted source
+    if not token_query or not validate_incoming_call_authorization(
+        token_query=token_query,
+        acs_token_query=settings.ACS_TOKEN_QUERY,
+    ):
+        logger.warning("Unauthorized incoming call event received")
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    # Process the incoming call event and determine if the call should be accepted or rejected
     result = process_incoming_call_event(events=events, client=acs_client)
 
     if result:
@@ -38,10 +52,22 @@ async def post_incoming_call(
     dependencies=[Depends(get_acs_client)],
 )
 async def post_callback_context(
-    contextId: str, events: list[dict], acs_client=Depends(get_acs_client)
+    contextId: str,
+    events: list[dict],
+    authorization_header: Annotated[str | None, Header(alias="authorization")] = None,
+    acs_client=Depends(get_acs_client),
 ) -> None:
     """
     Receives callback events for a call from Azure Communication Services.
     """
     logger.info("Received Callback Context Event for a Call")
+
+    # Validate the authorization header to ensure the request is coming from a trusted source
+    if not authorization_header or not validate_callback_authorization(
+        authorization_header=authorization_header,
+        acs_resource_id=settings.ACS_RESOURCE_ID,
+    ):
+        logger.warning("Unauthorized callback event received")
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
     await process_callback_event(context_id=contextId, events=events, client=acs_client)

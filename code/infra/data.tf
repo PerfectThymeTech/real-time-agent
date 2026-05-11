@@ -25,3 +25,10 @@ data "azurerm_log_analytics_workspace" "log_analytics_workspace" {
 data "azurerm_monitor_diagnostic_categories" "diagnostic_categories_container_app_environment" {
   resource_id = azurerm_container_app_environment.container_app_environment.id
 }
+
+data "azapi_resource" "communication_service" {
+  type        = "Microsoft.Communication/communicationServices@2025-09-01"
+  resource_id = module.communication_service.communication_service_id
+
+  response_export_values = ["properties.immutableResourceId"]
+}
