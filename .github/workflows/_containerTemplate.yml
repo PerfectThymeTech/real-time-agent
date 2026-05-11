@@ -55,7 +55,7 @@ jobs:
       # Install cosign
       - name: Install cosign
         id: install_cosign
-        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
         if: github.event_name != 'pull_request'
         with:
           cosign-release: 'v2.2.0'
@@ -63,7 +63,7 @@ jobs:
       # Install QEMU
       - name: Set up QEMU
         id: install_qemu
-        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
 
       # Install BuildKit
       - name: Install Buildx
@@ -73,7 +73,7 @@ jobs:
       # Login Container Registry
       - name: Login Container Registry
         id: registry_login
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         # if: github.event_name != 'pull_request'
         with:
           registry: ${{ inputs.registry_uri }}
@@ -97,7 +97,7 @@ jobs:
       # Build and Push Docker Image with Buildx
       - name: Build and push Docker image
         id: build_push
-        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         with:
           context: ${{ inputs.working_directory }}
           file: ${{ inputs.working_directory }}/Dockerfile
