@@ -7,7 +7,7 @@ logger = setup_logging(__name__)
 
 @function_tool()
 async def get_caller_phone_number(ctx: RunContextWrapper[UserSessionContext]) -> str:
-    """ "Function tool to get the caller's phone number from the call connection context.
+    """Function tool to get the caller's phone number from the call connection context.
 
     :return: The caller's phone number as a string.
     :rtype: str
