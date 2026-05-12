@@ -52,3 +52,15 @@ resource "azurerm_key_vault_secret" "key_vault_secret_aoai_primary_access_key" {
     module.key_vault.key_vault_setup_completed
   ]
 }
+
+resource "azurerm_key_vault_secret" "key_vault_secret_webhook_token" {
+  key_vault_id = module.key_vault.key_vault_id
+
+  name         = "webhook-authentication-secret"
+  content_type = "text/plain"
+  value        = random_uuid.uuid_webhook_token.result
+
+  depends_on = [
+    module.key_vault.key_vault_setup_completed
+  ]
+}

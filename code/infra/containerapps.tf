@@ -95,6 +95,11 @@ resource "azurerm_container_app" "container_app_backend" {
     identity            = module.user_assigned_identity.user_assigned_identity_id
     key_vault_secret_id = azurerm_key_vault_secret.key_vault_secret_aoai_primary_access_key.id
   }
+  secret {
+    name                = "webhook-token"
+    identity            = module.user_assigned_identity.user_assigned_identity_id
+    key_vault_secret_id = azurerm_key_vault_secret.key_vault_secret_webhook_token.id
+  }
   template {
     container {
       name   = "real-time-backend"
@@ -107,11 +112,11 @@ resource "azurerm_container_app" "container_app_backend" {
       }
       env {
         name  = "ACS_RESOURCE_ID"
-        value = data.azapi_resource.communication_service.properties.immutableResourceId
+        value = data.azapi_resource.communication_service.output.properties.immutableResourceId
       }
       env {
-        name  = "ACS_TOKEN_QUERY"
-        value = random_uuid.uuid.result
+        name        = "ACS_TOKEN_QUERY"
+        secret_name = "webhook-token"
       }
       env {
         name        = "APPLICATIONINSIGHTS_CONNECTION_STRING"
