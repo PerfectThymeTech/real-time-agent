@@ -60,6 +60,7 @@ class Settings(BaseSettings):
         ),
     )
     INSTRUCTIONS: str
+    WELCOME_MESSAGE: str = "Hi there! I am your Azure Copilot. How can I assist you today? Is there anything specific you'd like to know or discuss?"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
