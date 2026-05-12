@@ -30,9 +30,6 @@ async def realtime(
         "Received Websocket Connection", extra={"code": "REQUEST_REALTIME_RECEIVED"}
     )
 
-    # Accept the WebSocket connection
-    await websocket.accept()
-
     # Validate the authorization header to ensure the request is coming from a trusted source
     if not authorization_header or not validate_websocket_authorization(
         authorization_header=authorization_header,
@@ -44,6 +41,9 @@ async def realtime(
         )
         await websocket.close(code=1008, reason="Unauthorized")
         return
+
+    # Accept the WebSocket connection
+    await websocket.accept()
 
     async with AsyncExitStack() as stack:
         # Create and init communication handler
