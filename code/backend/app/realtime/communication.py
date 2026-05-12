@@ -111,16 +111,14 @@ class CommunicationHandler:
             "Ending model real time session", extra={"code": "END_SESSION_START"}
         )
         await self.session_context.__aexit__(None, None, None)
+        self.receive_task.cancel()
         try:
-            self.receive_task.cancel()
-            logger.info(
-                "Model real time session ended", extra={"code": "END_SESSION_SUCCESS"}
-            )
-        except asyncio.CancelledError as e:
-            logger.error(
-                f"Error cancelling receive task: {e}",
-                extra={"code": "END_SESSION_CANCEL_RECEIVE_TASK_ERROR"},
-            )
+            await self.receive_task
+        except asyncio.CancelledError:
+            pass
+        logger.info(
+            "Model real time session ended", extra={"code": "END_SESSION_SUCCESS"}
+        )
 
     async def send_audio(self, audio: bytes):
         """
