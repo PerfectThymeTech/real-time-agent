@@ -189,13 +189,16 @@ class CommunicationHandler:
                         extra={"code": "RECEIVE_AUDIO_DTMF_DATA_KIND_RECEIVED"},
                     )
 
-                    # Exract DTMF data
+                    # Extract DTMF data
                     dtmf_data = websocket_data.get("dtmfData", {}).get("data", None)
                     logger.debug(
-                        f"DTMF data received: {dtmf_data}",
+                        "DTMF data received",
                         extra={
                             "code": "RECEIVE_AUDIO_DTMF_DATA_KIND_VALUE_RECEIVED",
-                            "dtmf_data": dtmf_data,
+                            "dtmf_data_present": dtmf_data is not None,
+                            "dtmf_data_length": (
+                                len(str(dtmf_data)) if dtmf_data is not None else 0
+                            ),
                         },
                     )
 
