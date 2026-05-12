@@ -69,7 +69,7 @@ if settings.LOGGING_LEVEL == logging.DEBUG:
         async def receive() -> dict:
             return {"type": "http.request", "body": req_body, "more_body": False}
 
-        request._receive = receive
+        request = Request(request.scope, receive)
         response = await call_next(request)
 
         original_body_iterator = response.body_iterator
