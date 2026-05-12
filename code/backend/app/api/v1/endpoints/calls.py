@@ -36,8 +36,11 @@ async def post_incoming_call(
         "Received Incoming Call Event", extra={"code": "REQUEST_INCOMING_CALL_RECEIVED"}
     )
     logger.debug(
-        f"Received token: {token_query}",
-        extra={"code": "REQUEST_INCOMING_CALL_TOKEN_RECEIVED"},
+        "Received incoming call token",
+        extra={
+            "code": "REQUEST_INCOMING_CALL_TOKEN_RECEIVED",
+            "token_present": bool(token_query),
+        },
     )
 
     # Validate the token query parameter to ensure the request is coming from a trusted source
