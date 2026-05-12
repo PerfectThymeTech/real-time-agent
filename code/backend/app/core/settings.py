@@ -43,6 +43,8 @@ class Settings(BaseSettings):
     ACS_CONNECTION_STRING: str
     ACS_RESOURCE_ID: str
     ACS_TOKEN_QUERY: str
+    ACS_ISSUER: str = "https://acscallautomation.communication.azure.com"
+    ACS_JWKS_URL: str = "https://acscallautomation.communication.azure.com/calling/keys"
 
     # Azure Open AI settings
     AZURE_OPENAI_ENDPOINT: str
