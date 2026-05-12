@@ -2,8 +2,8 @@ from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
 from app.calls.process import get_acs_client
-from app.calls.validate import validate_callback_authorization
-from app.core import settings
+from app.calls.validate import validate_websocket_authorization
+from app.core.settings import settings
 from app.logs import setup_logging
 from app.realtime.communication import CommunicationHandler
 from fastapi import APIRouter, Depends, Header, WebSocket, WebSocketDisconnect
@@ -34,7 +34,7 @@ async def realtime(
     await websocket.accept()
 
     # Validate the authorization header to ensure the request is coming from a trusted source
-    if not authorization_header or not validate_callback_authorization(
+    if not authorization_header or not validate_websocket_authorization(
         authorization_header=authorization_header,
         acs_resource_id=settings.ACS_RESOURCE_ID,
     ):

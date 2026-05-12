@@ -9,7 +9,7 @@ from app.calls.validate import (
     validate_callback_authorization,
     validate_incoming_call_authorization,
 )
-from app.core import settings
+from app.core.settings import settings
 from app.logs import setup_logging
 from app.models.calls import ValidationResponse
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
