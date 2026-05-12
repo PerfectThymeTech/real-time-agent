@@ -2,6 +2,7 @@ import asyncio
 import base64
 import json
 
+from agents import RunContextWrapper
 from agents.realtime import RealtimeAgent, RealtimeRunner
 from agents.realtime.config import (
     RealtimeInputAudioTranscriptionConfig,
@@ -13,15 +14,14 @@ from agents.realtime.model import RealtimeModelConfig
 from agents.realtime.model_events import (
     RealtimeModelRawServerEvent,
 )
-from agents import RunContextWrapper
 from agents.realtime.model_inputs import RealtimeModelSendRawMessage
 from app.core.settings import settings
 from app.logs import setup_logging
-from app.utils import _truncate_str
 from app.models.realtime import UserSessionContext
+from app.realtime.tools import get_caller_phone_number, hang_up_call
+from app.utils import _truncate_str
 from fastapi import WebSocket
 from starlette.websockets import WebSocketState
-from app.realtime.tools import get_caller_phone_number, hang_up_call
 
 logger = setup_logging(__name__)
 

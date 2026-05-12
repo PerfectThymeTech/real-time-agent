@@ -1,5 +1,5 @@
-from pydantic import BaseModel
 from azure.communication.callautomation import CallAutomationClient
+from pydantic import BaseModel
 
 
 class UserSessionContext(BaseModel):
