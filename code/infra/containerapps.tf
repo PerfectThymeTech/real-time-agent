@@ -146,10 +146,10 @@ resource "azurerm_container_app" "container_app_backend" {
         name  = "MANAGED_IDENTITY_CLIENT_ID"
         value = module.user_assigned_identity.user_assigned_identity_client_id
       }
-      env {
-        name  = "INSTRUCTIONS"
-        value = "You are a customer service agent for Microsoft focused exclusively on Azure."
-      }
+      # env {
+      #   name  = "INSTRUCTIONS"
+      #   value = "You are a customer service agent for Microsoft focused exclusively on Azure."
+      # }
       env {
         name  = "LOGGING_LEVEL"
         value = "20"
