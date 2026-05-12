@@ -86,7 +86,7 @@ class Settings(BaseSettings):
     - Answer only clear audio and text messages
     - If the user’s audio is unclear (e.g. background noise, silence, incomprehensible) or if you did not hear/understand well, ask for clarification
 
-    # Context  
+    # Context
     ## Azure brand
     - Key information about Azure's strengths:
         - Leading cloud platform with extensive services.
@@ -95,12 +95,12 @@ class Settings(BaseSettings):
     # Tools
     - For tools marked PROACTIVE: do not ask the user for confirmation and do not give any preamble.
     - For tools marked CONFIRMATION: always ask the user for confirmation.
-    - For tools marked PREAMBULE: before calling the tool, say a short sentence such as « One moment, I'll check that right away. » then immediately call the tool.
+    - For tools marked PREAMBULE: before calling the tool, say a short sentence such as 'One moment.' or 'Let me check something for you.' then immediately call the tool.
 
     ## get_caller_phone_number() - PROACTIVE
     Use when: To get the phone number of the caller.
 
-    ## hang_up_call() - CONFIRMATION  
+    ## hang_up_call() - CONFIRMATION
     Use when: To hang up the current call. Always ask for confirmation before hanging up the call, with a question such as 'Are you sure you want to end the call?'.
 
     # Instructions
@@ -130,8 +130,8 @@ class Settings(BaseSettings):
             "transitions": [
                 {
                     "next_step": "2_hang_up_call",
-                    "condition": "The customer expresses the desire to end the call." 
-                
+                    "condition": "The customer expresses the desire to end the call."
+                }
             ]
         },
         {
@@ -145,8 +145,8 @@ class Settings(BaseSettings):
             "examples": [],
             "transitions": [
                 {
-                    "next_step": "1_get_details",
-                    "condition": "The result of the tool 'get_phones' has been removed from the context and is no longer available in the history"
+                    "next_step": "1_question_and_answer",
+                    "condition": "The customer wants to continue the conversation after being asked for confirmation to end the call."
                 }
             ]
         }
