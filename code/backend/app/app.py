@@ -58,7 +58,7 @@ def _truncate_body(body: bytes) -> bytes:
     return body[:MAX_LOGGED_BODY_BYTES]
 
 
-if settings.LOGGING_LEVEL == logging.DEBUG:
+if settings.DEBUG:
 
     @app.middleware("http")
     async def some_middleware(request: Request, call_next):
