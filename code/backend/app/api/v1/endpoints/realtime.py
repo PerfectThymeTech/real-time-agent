@@ -3,6 +3,7 @@ from typing import Annotated, Any
 
 from app.calls.process import get_acs_client
 from app.calls.validate import validate_websocket_authorization
+from app.models.realtime import UserSessionContext
 from app.core.settings import settings
 from app.logs import setup_logging
 from app.realtime.communication import CommunicationHandler
@@ -53,13 +54,19 @@ async def realtime(
         )
         await websocket.close(code=1008, reason="Missing call connection ID header")
         return
+    
+    # Create user session context
+    user_session_context = UserSessionContext(
+        acs_client=acs_client,
+        call_connection_id=call_connection_id_header,
+    )
 
     # Accept the WebSocket connection
     await websocket.accept()
 
     async with AsyncExitStack() as stack:
         # Create and init communication handler
-        comm_handler = CommunicationHandler(websocket=websocket)
+        comm_handler = CommunicationHandler(websocket=websocket, user_session_context=user_session_context)
         await comm_handler.init_model_realtime_session()
 
         # Init variable
