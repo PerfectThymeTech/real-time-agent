@@ -9,7 +9,8 @@ def validate_callback_authorization(
 ) -> bool:
     """
     Validates the authorization header of a callback event to ensure it is coming from a trusted source.
-    This is a placeholder function and should be implemented with proper validation logic, such as checking a shared secret or validating a JWT token.
+    Expects a Bearer JWT, retrieves the signing key from the Azure Communication Services JWKS endpoint,
+    and validates the token signature, issuer, and audience against the provided ACS resource ID.
 
     :param authorization_header: The value of the authorization header from the incoming request.
     :type authorization_header: str
