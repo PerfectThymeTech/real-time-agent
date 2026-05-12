@@ -38,14 +38,23 @@ def process_incoming_call_event(
     # Set callback base url
     callback_events_uri_base = f"https://{settings.APP_BASE_URL}/v1/calls/callbacks"
     websocket_url = f"wss://{settings.APP_BASE_URL}/v1/realtime/realtime"
-    logger.info(f"Setting callback events base URI to: {callback_events_uri_base}", extra={"code": "PROCESS_INCOMING_CALL_CALLBACK_URI_SET"})
+    logger.info(
+        f"Setting callback events base URI to: {callback_events_uri_base}",
+        extra={"code": "PROCESS_INCOMING_CALL_CALLBACK_URI_SET"},
+    )
 
     for event in events:
         event_grid_event = EventGridEvent.from_dict(event)
-        logger.info(f"Processing event: {event_grid_event.event_type}", extra={"code": "PROCESS_INCOMING_CALL_EVENT_PROCESSING"})
+        logger.info(
+            f"Processing event: {event_grid_event.event_type}",
+            extra={"code": "PROCESS_INCOMING_CALL_EVENT_PROCESSING"},
+        )
 
         if event_grid_event.event_type == SystemEventNames.AcsIncomingCallEventName:
-            logger.info("Incoming call event received.", extra={"code": "PROCESS_INCOMING_CALL_INCOMING_CALL_EVENT_RECEIVED"})
+            logger.info(
+                "Incoming call event received.",
+                extra={"code": "PROCESS_INCOMING_CALL_INCOMING_CALL_EVENT_RECEIVED"},
+            )
 
             # Parse event data
             caller_id = (
@@ -89,14 +98,22 @@ def process_incoming_call_event(
                     extra={"code": "PROCESS_INCOMING_CALL_ANSWER_CALL_SUCCESS"},
                 )
             except HttpResponseError as e:
-                logger.error(f"Failed to answer call: {e.message}", extra={"code": "PROCESS_INCOMING_CALL_ANSWER_CALL_FAILED"})
+                logger.error(
+                    f"Failed to answer call: {e.message}",
+                    extra={"code": "PROCESS_INCOMING_CALL_ANSWER_CALL_FAILED"},
+                )
                 raise e
 
         elif (
             event_grid_event.event_type
             == SystemEventNames.EventGridSubscriptionValidationEventName
         ):
-            logger.info("Event subscription validation event received.", extra={"code": "PROCESS_INCOMING_CALL_EVENT_SUBSCRIPTION_VALIDATION_RECEIVED"})
+            logger.info(
+                "Event subscription validation event received.",
+                extra={
+                    "code": "PROCESS_INCOMING_CALL_EVENT_SUBSCRIPTION_VALIDATION_RECEIVED"
+                },
+            )
 
             # Parse event data
             validation_code = event_grid_event.data.get("validationCode")
@@ -121,13 +138,14 @@ async def process_callback_event(
 
         logger.info(
             f"Processing event. Context ID: {context_id}, Event Type: {event_type}, Correlation ID: {event_data.get('correlationId')}, Call Connection ID: {event_data.get('callConnectionId')}",
-            extra={"code": "PROCESS_CALLBACK_EVENT_PROCESSING"}
+            extra={"code": "PROCESS_CALLBACK_EVENT_PROCESSING"},
         )
 
         match event_type:
             case "Microsoft.Communication.CallConnected":
                 logger.info(
-                    f"Call connected event received for Context ID: {context_id}", extra={"code": "PROCESS_CALLBACK_EVENT_CALL_CONNECTED_RECEIVED"}
+                    f"Call connected event received for Context ID: {context_id}",
+                    extra={"code": "PROCESS_CALLBACK_EVENT_CALL_CONNECTED_RECEIVED"},
                 )
 
                 # Get call connection properties
@@ -136,7 +154,9 @@ async def process_callback_event(
                 ).get_call_properties()
                 logger.info(
                     f"MediaStreamingSubscription: {getattr(call_properties, 'media_streaming_subscription', 'N/A')}",
-                    extra={"code": "PROCESS_CALLBACK_EVENT_CALL_CONNECTED_CALL_PROPERTIES_RECEIVED"}
+                    extra={
+                        "code": "PROCESS_CALLBACK_EVENT_CALL_CONNECTED_CALL_PROPERTIES_RECEIVED"
+                    },
                 )
 
             case (
@@ -145,38 +165,48 @@ async def process_callback_event(
             ):
                 logger.info(
                     f"Media streaming event received for Context ID: {context_id}",
-                    extra={"code": "PROCESS_CALLBACK_EVENT_MEDIA_STREAMING_EVENT_RECEIVED"}
+                    extra={
+                        "code": "PROCESS_CALLBACK_EVENT_MEDIA_STREAMING_EVENT_RECEIVED"
+                    },
                 )
 
                 # Get Media Streaming Update
                 media_streaming_update = event_data.get("mediaStreamingUpdate", {})
                 logger.info(
                     f"Media Streaming Content Type: {media_streaming_update.get('contentType')}, Media Streaming Status: {media_streaming_update.get('mediaStreamingStatus')}, Media Streaming Details: {media_streaming_update.get('mediaStreamingStatusDetails')}",
-                    extra={"code": "PROCESS_CALLBACK_EVENT_MEDIA_STREAMING_UPDATE_RECEIVED"}
+                    extra={
+                        "code": "PROCESS_CALLBACK_EVENT_MEDIA_STREAMING_UPDATE_RECEIVED"
+                    },
                 )
 
             case "Microsoft.Communication.MediaStreamingFailed":
                 logger.info(
                     f"Media streaming failed event received for Context ID: {context_id}",
-                    extra={"code": "PROCESS_CALLBACK_EVENT_MEDIA_STREAMING_FAILED_RECEIVED"}
+                    extra={
+                        "code": "PROCESS_CALLBACK_EVENT_MEDIA_STREAMING_FAILED_RECEIVED"
+                    },
                 )
 
                 # Get Result Information
                 result_information = event_data.get("resultInformation", {})
                 logger.info(
                     f"Code: {result_information.get('code')}, Subcode: {result_information.get('subCode')}",
-                    extra={"code": "PROCESS_CALLBACK_EVENT_MEDIA_STREAMING_FAILED_RESULT_INFORMATION_RECEIVED"}
+                    extra={
+                        "code": "PROCESS_CALLBACK_EVENT_MEDIA_STREAMING_FAILED_RESULT_INFORMATION_RECEIVED"
+                    },
                 )
 
             case "Microsoft.Communication.CallDisconnected":
                 logger.info(
                     f"Call disconnected event received for Context ID: {context_id}",
-                    extra={"code": "PROCESS_CALLBACK_EVENT_CALL_DISCONNECTED_RECEIVED"}
+                    extra={"code": "PROCESS_CALLBACK_EVENT_CALL_DISCONNECTED_RECEIVED"},
                 )
 
             case _:
                 logger.warning(
                     f"Unhandled event type: {event_type} for Context ID: {context_id}",
-                    extra={"code": "PROCESS_CALLBACK_EVENT_UNHANDLED_EVENT_TYPE_RECEIVED"}
+                    extra={
+                        "code": "PROCESS_CALLBACK_EVENT_UNHANDLED_EVENT_TYPE_RECEIVED"
+                    },
                 )
     return None

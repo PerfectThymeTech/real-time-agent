@@ -79,7 +79,7 @@ class CommunicationHandler:
         # Create real time session
         logger.info(
             f"Initialize model real time session with endpoint '{settings.AZURE_OPENAI_ENDPOINT}' and model '{settings.REALTIME_MODEL_NAME}'",
-            extra={"code": "INIT_MODEL_REALTIME_SESSION_START"}
+            extra={"code": "INIT_MODEL_REALTIME_SESSION_START"},
         )
         session_context = await real_time_runner.run(
             context=None,
@@ -88,11 +88,17 @@ class CommunicationHandler:
         session = await session_context.__aenter__()
 
         # Start handling real time messages
-        logger.info("Starting to handle real time messages from model session", extra={"code": "INIT_MODEL_REALTIME_SESSION_START_PROCESSING_MESSAGES"})
+        logger.info(
+            "Starting to handle real time messages from model session",
+            extra={"code": "INIT_MODEL_REALTIME_SESSION_START_PROCESSING_MESSAGES"},
+        )
         receive_task = asyncio.create_task(self.process_realtime_messages())
 
         # Set properties
-        logger.info("Model real time session initialized", extra={"code": "INIT_MODEL_REALTIME_SESSION_INITIALIZED"})
+        logger.info(
+            "Model real time session initialized",
+            extra={"code": "INIT_MODEL_REALTIME_SESSION_INITIALIZED"},
+        )
         self.session = session
         self.session_context = session_context
         self.receive_task = receive_task
@@ -101,19 +107,29 @@ class CommunicationHandler:
         """
         End the session.
         """
-        logger.info("Ending model real time session", extra={"code": "END_SESSION_START"})
+        logger.info(
+            "Ending model real time session", extra={"code": "END_SESSION_START"}
+        )
         await self.session_context.__aexit__(None, None, None)
         try:
             self.receive_task.cancel()
-            logger.info("Model real time session ended", extra={"code": "END_SESSION_SUCCESS"})
+            logger.info(
+                "Model real time session ended", extra={"code": "END_SESSION_SUCCESS"}
+            )
         except asyncio.CancelledError as e:
-            logger.error(f"Error cancelling receive task: {e}", extra={"code": "END_SESSION_CANCEL_RECEIVE_TASK_ERROR"})
+            logger.error(
+                f"Error cancelling receive task: {e}",
+                extra={"code": "END_SESSION_CANCEL_RECEIVE_TASK_ERROR"},
+            )
 
     async def send_audio(self, audio: bytes):
         """
         Send audio data to the real time model session.
         """
-        logger.debug("Sending audio data to model session", extra={"code": "SEND_AUDIO_TO_MODEL_SESSION"})
+        logger.debug(
+            "Sending audio data to model session",
+            extra={"code": "SEND_AUDIO_TO_MODEL_SESSION"},
+        )
         await self.session.send_audio(
             audio=audio,
             commit=False,
@@ -129,7 +145,10 @@ class CommunicationHandler:
 
             match websocket_data.get("kind", None):
                 case "AudioData":
-                    logger.info("Received audio data over WebSocket", extra={"code": "RECEIVE_AUDIO_AUDIO_DATA_KIND_RECEIVED"})
+                    logger.info(
+                        "Received audio data over WebSocket",
+                        extra={"code": "RECEIVE_AUDIO_AUDIO_DATA_KIND_RECEIVED"},
+                    )
 
                     # Extract audio data
                     audio_data_base64 = websocket_data.get("audioData", {}).get(
@@ -146,14 +165,17 @@ class CommunicationHandler:
                 case _:
                     logger.warning(
                         f"Unknown data kind received over WebSocket: {websocket_data.get('kind', None)}",
-                        extra={"code": "RECEIVE_AUDIO_UNKNOWN_DATA_KIND_RECEIVED"}
+                        extra={"code": "RECEIVE_AUDIO_UNKNOWN_DATA_KIND_RECEIVED"},
                     )
 
     async def return_audio(self, audio: bytes):
         """
         Return audio data to the client over the WebSocket.
         """
-        logger.debug("Audio received from the model, sending to ACS client over WebSocket", extra={"code": "RETURN_AUDIO"})
+        logger.debug(
+            "Audio received from the model, sending to ACS client over WebSocket",
+            extra={"code": "RETURN_AUDIO"},
+        )
         await self.websocket.send_text(
             json.dumps(
                 {
@@ -183,17 +205,32 @@ class CommunicationHandler:
         Process real time messages from the model session.
         """
         try:
-            logger.debug("Handling realtime messages", extra={"code": "PROCESS_REALTIME_MESSAGES_START"})
+            logger.debug(
+                "Handling realtime messages",
+                extra={"code": "PROCESS_REALTIME_MESSAGES_START"},
+            )
             async for event in self.session:
-                logger.debug(f"Event received: {event.type}", extra={"code": "PROCESS_REALTIME_MESSAGES_EVENT_RECEIVED"})
+                logger.debug(
+                    f"Event received: {event.type}",
+                    extra={"code": "PROCESS_REALTIME_MESSAGES_EVENT_RECEIVED"},
+                )
                 try:
                     if settings.DEBUG and event.data:
                         truncated_data = _truncate_str(str(event.data), 200)
-                        logger.debug(f"Data: '{truncated_data}'", extra={"code": "PROCESS_REALTIME_MESSAGES_EVENT_DATA"})
-                        logger.debug(f"Event Info: '{event.info}'", extra={"code": "PROCESS_REALTIME_MESSAGES_EVENT_INFO"})
+                        logger.debug(
+                            f"Data: '{truncated_data}'",
+                            extra={"code": "PROCESS_REALTIME_MESSAGES_EVENT_DATA"},
+                        )
+                        logger.debug(
+                            f"Event Info: '{event.info}'",
+                            extra={"code": "PROCESS_REALTIME_MESSAGES_EVENT_INFO"},
+                        )
 
                 except Exception as e:
-                    logger.warning(f"Error processing events data: {e}", extra={"code": "PROCESS_REALTIME_MESSAGES_EVENT_DATA_ERROR"})
+                    logger.warning(
+                        f"Error processing events data: {e}",
+                        extra={"code": "PROCESS_REALTIME_MESSAGES_EVENT_DATA_ERROR"},
+                    )
 
                 if event.type == "agent_start":
                     pass
@@ -204,12 +241,12 @@ class CommunicationHandler:
                 elif event.type == "tool_start":
                     logger.info(
                         f"Tool call start detected. Agent: '{event.agent}', Tool Name: '{event.tool.name}', Tool arguments: '{event.arguments}''",
-                        extra={"code": "PROCESS_REALTIME_MESSAGES_TOOL_START_RECEIVED"}
+                        extra={"code": "PROCESS_REALTIME_MESSAGES_TOOL_START_RECEIVED"},
                     )
                 elif event.type == "tool_end":
                     logger.info(
                         f"Tool call end detected. Agent: '{event.agent}', Tool Name: '{event.tool.name}', Tool arguments: '{event.arguments}', Tool output: '{event.output}'",
-                        extra={"code": "PROCESS_REALTIME_MESSAGES_TOOL_END_RECEIVED"}
+                        extra={"code": "PROCESS_REALTIME_MESSAGES_TOOL_END_RECEIVED"},
                     )
                 elif event.type == "audio":
                     if event.audio and event.audio.data:
@@ -231,12 +268,19 @@ class CommunicationHandler:
                     ):
                         # Get raw event type
                         raw_event_type = event.data.data.get("type", None)
-                        logger.info(f"Raw event type: {raw_event_type}", extra={"code": "PROCESS_REALTIME_MESSAGES_RAW_MODEL_EVENT_RECEIVED"})
+                        logger.info(
+                            f"Raw event type: {raw_event_type}",
+                            extra={
+                                "code": "PROCESS_REALTIME_MESSAGES_RAW_MODEL_EVENT_RECEIVED"
+                            },
+                        )
 
                         if raw_event_type == "response.output_audio_transcript.done":
                             logger.info(
                                 f"Model output transcription completed: '{event.data.data.get('transcript', None)}'",
-                                extra={"code": "PROCESS_REALTIME_MESSAGES_OUTPUT_AUDIO_TRANSCRIPT_DONE_RECEIVED"}
+                                extra={
+                                    "code": "PROCESS_REALTIME_MESSAGES_OUTPUT_AUDIO_TRANSCRIPT_DONE_RECEIVED"
+                                },
                             )
                         elif (
                             raw_event_type
@@ -244,15 +288,23 @@ class CommunicationHandler:
                         ):
                             logger.info(
                                 f"User input transcription completed: {event.data.data.get('transcript', None)}",
-                                extra={"code": "PROCESS_REALTIME_MESSAGES_INPUT_AUDIO_TRANSCRIPTION_COMPLETED_RECEIVED"}
+                                extra={
+                                    "code": "PROCESS_REALTIME_MESSAGES_INPUT_AUDIO_TRANSCRIPTION_COMPLETED_RECEIVED"
+                                },
                             )
 
                 elif event.type == "error":
-                    logger.error(f"Error event received from model: {event.error}", extra={"code": "PROCESS_REALTIME_MESSAGES_ERROR_RECEIVED"})
+                    logger.error(
+                        f"Error event received from model: {event.error}",
+                        extra={"code": "PROCESS_REALTIME_MESSAGES_ERROR_RECEIVED"},
+                    )
                 elif event.type == "input_audio_timeout_triggered":
                     pass
                 else:
                     pass
         except Exception as e:
-            logger.error(f"Breaking error processing events for session: {e}", extra={"code": "PROCESS_REALTIME_MESSAGES_EXCEPTION"})
+            logger.error(
+                f"Breaking error processing events for session: {e}",
+                extra={"code": "PROCESS_REALTIME_MESSAGES_EXCEPTION"},
+            )
             raise e
