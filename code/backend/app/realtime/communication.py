@@ -13,6 +13,7 @@ from agents.realtime.model import RealtimeModelConfig
 from agents.realtime.model_events import (
     RealtimeModelRawServerEvent,
 )
+from agents.realtime.model_inputs import RealtimeModelSendRawMessage
 from app.core.settings import settings
 from app.logs import setup_logging
 from app.utils import _truncate_str
@@ -99,6 +100,25 @@ class CommunicationHandler:
             "Model real time session initialized",
             extra={"code": "INIT_MODEL_REALTIME_SESSION_INITIALIZED"},
         )
+
+        # Start creating response to trigger model processing
+        await session.model.send_event(
+            event=RealtimeModelSendRawMessage(
+                message={
+                    "type": "response.create",
+                    "other_data": {
+                        "response": {
+                            "instructions": (
+                                "Welcome the user and say exactly, without any additions, the following message: '"
+                                f"{settings.WELCOME_MESSAGE}"
+                                "' now before continuing the conversation."
+                            )
+                        }
+                    },
+                },
+            )
+        )
+
         self.session = session
         self.session_context = session_context
         self.receive_task = receive_task
@@ -162,6 +182,22 @@ class CommunicationHandler:
                     # Send audio data to the real time model session
                     if audio_data_bytes:
                         await self.send_audio(audio=audio_data_bytes)
+
+                case "DtmfData":
+                    logger.info(
+                        "Received DTMF data over WebSocket",
+                        extra={"code": "RECEIVE_AUDIO_DTMF_DATA_KIND_RECEIVED"},
+                    )
+
+                    # Exract DTMF data
+                    dtmf_data = websocket_data.get("dtmfData", {}).get("data", None)
+                    logger.debug(
+                        f"DTMF data received: {dtmf_data}",
+                        extra={
+                            "code": "RECEIVE_AUDIO_DTMF_DATA_KIND_VALUE_RECEIVED",
+                            "dtmf_data": dtmf_data,
+                        },
+                    )
 
                 case _:
                     logger.warning(
