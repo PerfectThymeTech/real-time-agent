@@ -26,7 +26,7 @@ async def realtime(
     """
     WebSocket endpoint for real-time communication.
     """
-    logger.info("Received Websocket Connection")
+    logger.info("Received Websocket Connection", extra={"code": "REQUEST_REALTIME_RECEIVED"})
 
     # Accept the WebSocket connection
     await websocket.accept()
@@ -49,11 +49,11 @@ async def realtime(
             await comm_handler.receive_audio()
 
         except WebSocketDisconnect as e:
-            logger.warning(f"WebSocket disconnected by client: {e}", exc_info=True)
+            logger.warning(f"WebSocket disconnected by client: {e}", exc_info=True, extra={"code": "REQUEST_REALTIME_WEBSOCKET_DISCONNECTED_BY_CLIENT"})
             error_occurred = True
 
         except Exception as e:
-            logger.error(f"Unexpected exception occurred: {e}", exc_info=e)
+            logger.error(f"Unexpected exception occurred: {e}", exc_info=e, extra={"code": "REQUEST_REALTIME_UNEXPECTED_EXCEPTION"})
             error_occurred = True
 
             # End websocket connection
