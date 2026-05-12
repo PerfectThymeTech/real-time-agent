@@ -4,7 +4,7 @@ from typing import Annotated, Any
 from app.calls.process import get_acs_client
 from app.logs import setup_logging
 from app.realtime.communication import CommunicationHandler
-from fastapi import APIRouter, Depends, Header, WebSocket
+from fastapi import APIRouter, Depends, Header, WebSocket, WebSocketDisconnect
 
 logger = setup_logging(__name__)
 
@@ -47,6 +47,10 @@ async def realtime(
         try:
             # Receive audio data over websocket
             await comm_handler.receive_audio()
+
+        except WebSocketDisconnect as e:
+            logger.warning(f"WebSocket disconnected by client: {e}", exc_info=True)
+            error_occurred = True
 
         except Exception as e:
             logger.error(f"Unexpected exception occurred: {e}", exc_info=e)
