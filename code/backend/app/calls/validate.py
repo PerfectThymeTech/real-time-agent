@@ -1,8 +1,8 @@
 import secrets
 
 import jwt
-from app.logs import setup_logging
 from app.core.settings import settings
+from app.logs import setup_logging
 
 logger = setup_logging(__name__)
 JWKS_CLIENT = jwt.PyJWKClient(settings.ACS_JWKS_URL)
