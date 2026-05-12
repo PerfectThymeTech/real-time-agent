@@ -4,6 +4,42 @@ import jwt
 from app.logs import setup_logging
 
 logger = setup_logging(__name__)
+ACS_JWKS_URL = "https://acscallautomation.communication.azure.com/calling/keys"
+ACS_ISSUER = "https://acscallautomation.communication.azure.com"
+JWKS_CLIENT = jwt.PyJWKClient(ACS_JWKS_URL)
+
+
+def _validate_acs_jwt(
+    authorization_header: str, acs_resource_id: str, failure_code: str
+) -> bool:
+    if not authorization_header.startswith("Bearer "):
+        return False
+    token = authorization_header.split(" ")[1]
+
+    try:
+        jwt.decode(
+            token,
+            JWKS_CLIENT.get_signing_key_from_jwt(token).key,
+            algorithms=["RS256"],
+            issuer=ACS_ISSUER,
+            audience=acs_resource_id,
+        )
+    except jwt.PyJWTError as e:
+        logger.warning(
+            f"JWT validation failed: {e}",
+            exc_info=True,
+            extra={"code": failure_code},
+        )
+        return False
+    except Exception as e:
+        logger.error(
+            f"Unexpected error during JWT validation: {e}",
+            exc_info=True,
+            extra={"code": failure_code},
+        )
+        return False
+
+    return True
 
 
 def validate_callback_authorization(
@@ -25,40 +61,11 @@ def validate_callback_authorization(
         "Validating callback authorization",
         extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_START"},
     )
-    # Create a PyJWKClient to fetch the signing keys from Azure Communication Services
-    jwks_client = jwt.PyJWKClient(
-        "https://acscallautomation.communication.azure.com/calling/keys"
-    )
-
-    # Get the token from the authorization header (assuming it is in the format "Bearer <token>")
-    if not authorization_header.startswith("Bearer "):
-        return False
-    token = authorization_header.split(" ")[1]
-
-    try:
-        # Decode and validate the JWT token
-        jwt.decode(
-            token,
-            jwks_client.get_signing_key_from_jwt(token).key,
-            algorithms=["RS256"],
-            issuer="https://acscallautomation.communication.azure.com",
-            audience=acs_resource_id,
-        )
-
-    except jwt.PyJWTError as e:
-        logger.warning(
-            f"JWT validation failed: {e}",
-            exc_info=True,
-            extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_FAILED"},
-        )
-        return False
-
-    except Exception as e:
-        logger.error(
-            f"Unexpected error during JWT validation: {e}",
-            exc_info=True,
-            extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_FAILED"},
-        )
+    if not _validate_acs_jwt(
+        authorization_header=authorization_header,
+        acs_resource_id=acs_resource_id,
+        failure_code="VALIDATE_AUTHORIZATION_CALLBACK_FAILED",
+    ):
         return False
 
     logger.info(
@@ -118,40 +125,11 @@ def validate_websocket_authorization(
         "Validating WebSocket authorization",
         extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_START"},
     )
-    # Create a PyJWKClient to fetch the signing keys from Azure Communication Services
-    jwks_client = jwt.PyJWKClient(
-        "https://acscallautomation.communication.azure.com/calling/keys"
-    )
-
-    # Get the token from the authorization header (assuming it is in the format "Bearer <token>")
-    if not authorization_header.startswith("Bearer "):
-        return False
-    token = authorization_header.split(" ")[1]
-
-    try:
-        # Decode and validate the JWT token
-        jwt.decode(
-            token,
-            jwks_client.get_signing_key_from_jwt(token).key,
-            algorithms=["RS256"],
-            issuer="https://acscallautomation.communication.azure.com",
-            audience=acs_resource_id,
-        )
-
-    except jwt.PyJWTError as e:
-        logger.warning(
-            f"JWT validation failed: {e}",
-            exc_info=True,
-            extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_FAILED"},
-        )
-        return False
-
-    except Exception as e:
-        logger.error(
-            f"Unexpected error during JWT validation: {e}",
-            exc_info=True,
-            extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_FAILED"},
-        )
+    if not _validate_acs_jwt(
+        authorization_header=authorization_header,
+        acs_resource_id=acs_resource_id,
+        failure_code="VALIDATE_AUTHORIZATION_WEBSOCKET_FAILED",
+    ):
         return False
 
     logger.info(

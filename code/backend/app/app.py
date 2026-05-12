@@ -41,10 +41,10 @@ def get_app() -> FastAPI:
 
 
 app = get_app()
+logger = setup_logging(__name__)
 
 
 def log_info(req_headers, req_body, res_body):
-    logger = setup_logging(__name__)
     logger.debug(f"Request Headers: {req_headers}")
     logger.debug(f"Request Body: {req_body}")
     logger.debug(f"Response Body: {res_body}")
