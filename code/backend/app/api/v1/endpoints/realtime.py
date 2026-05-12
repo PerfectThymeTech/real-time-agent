@@ -61,7 +61,7 @@ async def realtime(
         except Exception as e:
             logger.error(
                 f"Unexpected exception occurred: {e}",
-                exc_info=e,
+                exc_info=True,
                 extra={"code": "REQUEST_REALTIME_UNEXPECTED_EXCEPTION"},
             )
             error_occurred = True

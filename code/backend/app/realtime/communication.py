@@ -119,6 +119,7 @@ class CommunicationHandler:
         except asyncio.CancelledError as e:
             logger.error(
                 f"Error cancelling receive task: {e}",
+                exc_info=True,
                 extra={"code": "END_SESSION_CANCEL_RECEIVE_TASK_ERROR"},
             )
 
@@ -240,7 +241,7 @@ class CommunicationHandler:
                     pass
                 elif event.type == "tool_start":
                     logger.info(
-                        f"Tool call start detected. Agent: '{event.agent}', Tool Name: '{event.tool.name}', Tool arguments: '{event.arguments}''",
+                        f"Tool call start detected. Agent: '{event.agent}', Tool Name: '{event.tool.name}', Tool arguments: '{event.arguments}'",
                         extra={"code": "PROCESS_REALTIME_MESSAGES_TOOL_START_RECEIVED"},
                     )
                 elif event.type == "tool_end":
@@ -296,6 +297,7 @@ class CommunicationHandler:
                 elif event.type == "error":
                     logger.error(
                         f"Error event received from model: {event.error}",
+                        exc_info=True,
                         extra={"code": "PROCESS_REALTIME_MESSAGES_ERROR_RECEIVED"},
                     )
                 elif event.type == "input_audio_timeout_triggered":
@@ -305,6 +307,7 @@ class CommunicationHandler:
         except Exception as e:
             logger.error(
                 f"Breaking error processing events for session: {e}",
+                exc_info=True,
                 extra={"code": "PROCESS_REALTIME_MESSAGES_EXCEPTION"},
             )
             raise e

@@ -100,6 +100,7 @@ def process_incoming_call_event(
             except HttpResponseError as e:
                 logger.error(
                     f"Failed to answer call: {e.message}",
+                    exc_info=True,
                     extra={"code": "PROCESS_INCOMING_CALL_ANSWER_CALL_FAILED"},
                 )
                 raise e
