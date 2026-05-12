@@ -21,6 +21,9 @@ router = APIRouter()
 async def realtime(
     websocket: WebSocket,
     authorization_header: Annotated[str | None, Header(alias="authorization")] = None,
+    call_connection_id_header: Annotated[
+        str | None, Header(alias="x-ms-call-connection-id")
+    ] = None,
     acs_client=Depends(get_acs_client),
 ) -> Any:
     """
@@ -40,6 +43,15 @@ async def realtime(
             extra={"code": "REQUEST_REALTIME_UNAUTHORIZED"},
         )
         await websocket.close(code=1008, reason="Unauthorized")
+        return
+
+    # Validate the presence of the call connection ID header
+    if not call_connection_id_header:
+        logger.warning(
+            "Missing call connection ID header in WebSocket connection attempt",
+            extra={"code": "REQUEST_REALTIME_MISSING_CALL_CONNECTION_ID"},
+        )
+        await websocket.close(code=1008, reason="Missing call connection ID header")
         return
 
     # Accept the WebSocket connection
