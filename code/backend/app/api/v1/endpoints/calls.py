@@ -28,15 +28,17 @@ async def post_incoming_call(
     """
     Receives incoming call events from Azure Communication Services.
     """
-    logger.info("Received Incoming Call Event")
-    logger.debug(f"Received token: {token_query}")
+    logger.info(
+        "Received Incoming Call Event", extra={"code": "REQUEST_INCOMING_CALL_RECEIVED"}
+    )
+    logger.debug(f"Received token: {token_query}", extra={"code": "REQUEST_INCOMING_CALL_TOKEN_RECEIVED"})
 
     # Validate the token query parameter to ensure the request is coming from a trusted source
     if not token_query or not validate_incoming_call_authorization(
         token_query=token_query,
         acs_token_query=settings.ACS_TOKEN_QUERY,
     ):
-        logger.warning("Unauthorized incoming call event received")
+        logger.warning("Unauthorized incoming call event received", extra={"code": "REQUEST_INCOMING_CALL_UNAUTHORIZED"})
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     # Process the incoming call event and determine if the call should be accepted or rejected
@@ -60,14 +62,17 @@ async def post_callback_context(
     """
     Receives callback events for a call from Azure Communication Services.
     """
-    logger.info("Received Callback Context Event for a Call")
+    logger.info(
+        "Received Callback Context Event for a Call",
+        extra={"code": "REQUEST_CALLBACK_CONTEXT_RECEIVED"},
+    )
 
     # Validate the authorization header to ensure the request is coming from a trusted source
     if not authorization_header or not validate_callback_authorization(
         authorization_header=authorization_header,
         acs_resource_id=settings.ACS_RESOURCE_ID,
     ):
-        logger.warning("Unauthorized callback event received")
+        logger.warning("Unauthorized callback event received", extra={"code": "REQUEST_CALLBACK_CONTEXT_UNAUTHORIZED"})
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     await process_callback_event(context_id=contextId, events=events, client=acs_client)
