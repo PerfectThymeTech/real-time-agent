@@ -1,3 +1,5 @@
+import secrets
+
 import jwt
 from app.logs import setup_logging
 
@@ -84,7 +86,7 @@ def validate_incoming_call_authorization(
         extra={"code": "VALIDATE_AUTHORIZATION_INCOMING_CALL_START"},
     )
 
-    if token_query != acs_token_query:
+    if not secrets.compare_digest(token_query, acs_token_query):
         logger.warning(
             "Incoming call authorization failed: Invalid token query",
             extra={"code": "VALIDATE_AUTHORIZATION_INCOMING_CALL_FAILED"},
