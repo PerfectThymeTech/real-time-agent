@@ -25,7 +25,9 @@ async def post_incoming_call(
     """
     Receives incoming call events from Azure Communication Services.
     """
-    logger.info("Received Incoming Call Event")
+    logger.info(
+        "Received Incoming Call Event", extra={"code": "REQUEST_INCOMING_CALL_RECEIVED"}
+    )
     result = process_incoming_call_event(events=events, client=acs_client)
 
     if result:
@@ -43,5 +45,8 @@ async def post_callback_context(
     """
     Receives callback events for a call from Azure Communication Services.
     """
-    logger.info("Received Callback Context Event for a Call")
+    logger.info(
+        "Received Callback Context Event for a Call",
+        extra={"code": "REQUEST_CALLBACK_CONTEXT_RECEIVED"},
+    )
     await process_callback_event(context_id=contextId, events=events, client=acs_client)
