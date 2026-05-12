@@ -2,13 +2,11 @@ from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
 from app.calls.process import get_acs_client
+from app.calls.validate import validate_callback_authorization
+from app.core import settings
 from app.logs import setup_logging
 from app.realtime.communication import CommunicationHandler
 from fastapi import APIRouter, Depends, Header, WebSocket, WebSocketDisconnect
-
-from app.calls.validate import validate_callback_authorization
-
-from app.core import settings
 
 logger = setup_logging(__name__)
 
@@ -40,7 +38,10 @@ async def realtime(
         authorization_header=authorization_header,
         acs_resource_id=settings.ACS_RESOURCE_ID,
     ):
-        logger.warning("Unauthorized WebSocket connection attempt", extra={"code": "REQUEST_REALTIME_UNAUTHORIZED"})
+        logger.warning(
+            "Unauthorized WebSocket connection attempt",
+            extra={"code": "REQUEST_REALTIME_UNAUTHORIZED"},
+        )
         await websocket.close(code=1008, reason="Unauthorized")
         return
 

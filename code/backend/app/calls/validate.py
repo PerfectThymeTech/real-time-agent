@@ -1,10 +1,12 @@
 import jwt
-
 from app.logs import setup_logging
 
 logger = setup_logging(__name__)
 
-def validate_callback_authorization(authorization_header: str, acs_resource_id: str) -> bool:
+
+def validate_callback_authorization(
+    authorization_header: str, acs_resource_id: str
+) -> bool:
     """
     Validates the authorization header of a callback event to ensure it is coming from a trusted source.
     This is a placeholder function and should be implemented with proper validation logic, such as checking a shared secret or validating a JWT token.
@@ -16,7 +18,10 @@ def validate_callback_authorization(authorization_header: str, acs_resource_id: 
     :return: True if the authorization is valid, False otherwise.
     :rtype: bool
     """
-    logger.info("Validating callback authorization", extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_START"})
+    logger.info(
+        "Validating callback authorization",
+        extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_START"},
+    )
     # Create a PyJWKClient to fetch the signing keys from Azure Communication Services
     jwks_client = jwt.PyJWKClient(
         "https://acscallautomation.communication.azure.com/calling/keys"
@@ -38,18 +43,31 @@ def validate_callback_authorization(authorization_header: str, acs_resource_id: 
         )
 
     except jwt.PyJWTError as e:
-        logger.warning(f"JWT validation failed: {e}", exc_info=True, extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_FAILED"})
+        logger.warning(
+            f"JWT validation failed: {e}",
+            exc_info=True,
+            extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_FAILED"},
+        )
         return False
 
     except Exception as e:
-        logger.error(f"Unexpected error during JWT validation: {e}", exc_info=True, extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_FAILED"})
+        logger.error(
+            f"Unexpected error during JWT validation: {e}",
+            exc_info=True,
+            extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_FAILED"},
+        )
         return False
 
-    logger.info("Callback authorization validated successfully", extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_SUCCESS"})
+    logger.info(
+        "Callback authorization validated successfully",
+        extra={"code": "VALIDATE_AUTHORIZATION_CALLBACK_SUCCESS"},
+    )
     return True
 
 
-def validate_incoming_call_authorization(token_query: str, acs_token_query: str) -> bool:
+def validate_incoming_call_authorization(
+    token_query: str, acs_token_query: str
+) -> bool:
     """
     Validates the token query parameter of an incoming call event to ensure it matches the expected value.
 
@@ -60,17 +78,28 @@ def validate_incoming_call_authorization(token_query: str, acs_token_query: str)
     :return: True if the token query is valid, False otherwise.
     :rtype: bool
     """
-    logger.info("Validating incoming call authorization", extra={"code": "VALIDATE_AUTHORIZATION_INCOMING_CALL_START"})
-    
+    logger.info(
+        "Validating incoming call authorization",
+        extra={"code": "VALIDATE_AUTHORIZATION_INCOMING_CALL_START"},
+    )
+
     if token_query != acs_token_query:
-        logger.warning("Incoming call authorization failed: Invalid token query", extra={"code": "VALIDATE_AUTHORIZATION_INCOMING_CALL_FAILED"})
+        logger.warning(
+            "Incoming call authorization failed: Invalid token query",
+            extra={"code": "VALIDATE_AUTHORIZATION_INCOMING_CALL_FAILED"},
+        )
         return False
 
-    logger.info("Incoming call authorization validated successfully", extra={"code": "VALIDATE_AUTHORIZATION_INCOMING_CALL_SUCCESS"})
+    logger.info(
+        "Incoming call authorization validated successfully",
+        extra={"code": "VALIDATE_AUTHORIZATION_INCOMING_CALL_SUCCESS"},
+    )
     return True
 
 
-def validate_websocket_authorization(authorization_header: str, acs_resource_id: str) -> bool:
+def validate_websocket_authorization(
+    authorization_header: str, acs_resource_id: str
+) -> bool:
     """
     Validates the authorization header of a WebSocket connection to ensure it is coming from a trusted source.
     This is a placeholder function and should be implemented with proper validation logic, such as checking a shared secret or validating a JWT token.
@@ -82,7 +111,10 @@ def validate_websocket_authorization(authorization_header: str, acs_resource_id:
     :return: True if the authorization is valid, False otherwise.
     :rtype: bool
     """
-    logger.info("Validating WebSocket authorization", extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_START"})
+    logger.info(
+        "Validating WebSocket authorization",
+        extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_START"},
+    )
     # Create a PyJWKClient to fetch the signing keys from Azure Communication Services
     jwks_client = jwt.PyJWKClient(
         "https://acscallautomation.communication.azure.com/calling/keys"
@@ -104,12 +136,23 @@ def validate_websocket_authorization(authorization_header: str, acs_resource_id:
         )
 
     except jwt.PyJWTError as e:
-        logger.warning(f"JWT validation failed: {e}", exc_info=True, extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_FAILED"})
+        logger.warning(
+            f"JWT validation failed: {e}",
+            exc_info=True,
+            extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_FAILED"},
+        )
         return False
 
     except Exception as e:
-        logger.error(f"Unexpected error during JWT validation: {e}", exc_info=True, extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_FAILED"})
+        logger.error(
+            f"Unexpected error during JWT validation: {e}",
+            exc_info=True,
+            extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_FAILED"},
+        )
         return False
 
-    logger.info("WebSocket authorization validated successfully", extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_SUCCESS"})
+    logger.info(
+        "WebSocket authorization validated successfully",
+        extra={"code": "VALIDATE_AUTHORIZATION_WEBSOCKET_SUCCESS"},
+    )
     return True
