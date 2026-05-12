@@ -2,11 +2,10 @@ import secrets
 
 import jwt
 from app.logs import setup_logging
+from app.core.settings import settings
 
 logger = setup_logging(__name__)
-ACS_JWKS_URL = "https://acscallautomation.communication.azure.com/calling/keys"
-ACS_ISSUER = "https://acscallautomation.communication.azure.com"
-JWKS_CLIENT = jwt.PyJWKClient(ACS_JWKS_URL)
+JWKS_CLIENT = jwt.PyJWKClient(settings.ACS_JWKS_URL)
 
 
 def _validate_acs_jwt(
@@ -21,7 +20,7 @@ def _validate_acs_jwt(
             token,
             JWKS_CLIENT.get_signing_key_from_jwt(token).key,
             algorithms=["RS256"],
-            issuer=ACS_ISSUER,
+            issuer=settings.ACS_ISSUER,
             audience=acs_resource_id,
         )
     except jwt.PyJWTError as e:
