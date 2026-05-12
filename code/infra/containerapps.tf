@@ -95,6 +95,11 @@ resource "azurerm_container_app" "container_app_backend" {
     identity            = module.user_assigned_identity.user_assigned_identity_id
     key_vault_secret_id = azurerm_key_vault_secret.key_vault_secret_aoai_primary_access_key.id
   }
+  secret {
+    name                = "webhook-token"
+    identity            = module.user_assigned_identity.user_assigned_identity_id
+    key_vault_secret_id = azurerm_key_vault_secret.key_vault_secret_webhook_token.id
+  }
   template {
     container {
       name   = "real-time-backend"
@@ -104,6 +109,14 @@ resource "azurerm_container_app" "container_app_backend" {
       env {
         name        = "ACS_CONNECTION_STRING"
         secret_name = "acs-connection-string"
+      }
+      env {
+        name  = "ACS_RESOURCE_ID"
+        value = data.azapi_resource.communication_service.output.properties.immutableResourceId
+      }
+      env {
+        name        = "ACS_TOKEN_QUERY"
+        secret_name = "webhook-token"
       }
       env {
         name        = "APPLICATIONINSIGHTS_CONNECTION_STRING"
@@ -136,6 +149,10 @@ resource "azurerm_container_app" "container_app_backend" {
       env {
         name  = "INSTRUCTIONS"
         value = "You are a customer service agent for Microsoft focused exclusively on Azure."
+      }
+      env {
+        name  = "LOGGING_LEVEL"
+        value = "20"
       }
       liveness_probe {
         failure_count_threshold = 3

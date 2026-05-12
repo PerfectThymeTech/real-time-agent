@@ -2,6 +2,8 @@ from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
 from app.calls.process import get_acs_client
+from app.calls.validate import validate_websocket_authorization
+from app.core.settings import settings
 from app.logs import setup_logging
 from app.realtime.communication import CommunicationHandler
 from fastapi import APIRouter, Depends, Header, WebSocket, WebSocketDisconnect
@@ -18,7 +20,8 @@ router = APIRouter()
 )
 async def realtime(
     websocket: WebSocket,
-    call_connection_id: Annotated[
+    authorization_header: Annotated[str | None, Header(alias="authorization")] = None,
+    call_connection_id_header: Annotated[
         str | None, Header(alias="x-ms-call-connection-id")
     ] = None,
     acs_client=Depends(get_acs_client),
@@ -30,13 +33,29 @@ async def realtime(
         "Received Websocket Connection", extra={"code": "REQUEST_REALTIME_RECEIVED"}
     )
 
+    # Validate the authorization header to ensure the request is coming from a trusted source
+    if not authorization_header or not validate_websocket_authorization(
+        authorization_header=authorization_header,
+        acs_resource_id=settings.ACS_RESOURCE_ID,
+    ):
+        logger.warning(
+            "Unauthorized WebSocket connection attempt",
+            extra={"code": "REQUEST_REALTIME_UNAUTHORIZED"},
+        )
+        await websocket.close(code=1008, reason="Unauthorized")
+        return
+
+    # Validate the presence of the call connection ID header
+    if not call_connection_id_header:
+        logger.warning(
+            "Missing call connection ID header in WebSocket connection attempt",
+            extra={"code": "REQUEST_REALTIME_MISSING_CALL_CONNECTION_ID"},
+        )
+        await websocket.close(code=1008, reason="Missing call connection ID header")
+        return
+
     # Accept the WebSocket connection
     await websocket.accept()
-
-    if not call_connection_id:
-        logger.warning(
-            "Missing x-ms-call-connection-id header indicates direct connection not coming through ACS."
-        )
 
     async with AsyncExitStack() as stack:
         # Create and init communication handler
@@ -75,4 +94,5 @@ async def realtime(
 
             # End websocket connection
             if not error_occurred:
+                logger.info("WebSocket connection closed normally, ending session.")
                 await websocket.close(code=1000, reason="Ending connection normally")
