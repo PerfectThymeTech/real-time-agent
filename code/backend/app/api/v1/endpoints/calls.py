@@ -1,7 +1,6 @@
 from typing import Annotated, Optional
 
 from app.calls.process import (
-    get_acs_client,
     process_callback_event,
     process_incoming_call_event,
 )
@@ -22,11 +21,9 @@ router = APIRouter()
 @router.post(
     path="/incoming",
     name="IncomingCall",
-    dependencies=[Depends(get_acs_client)],
 )
 async def post_incoming_call(
     events: list[dict],
-    acs_client=Depends(get_acs_client),
     token_query: Annotated[str | None, Query(alias="token")] = None,
 ) -> Optional[ValidationResponse]:
     """
@@ -55,7 +52,7 @@ async def post_incoming_call(
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     # Process the incoming call event and determine if the call should be accepted or rejected
-    result = process_incoming_call_event(events=events, client=acs_client)
+    result = await process_incoming_call_event(events=events)
 
     if result:
         return result
@@ -64,13 +61,11 @@ async def post_incoming_call(
 @router.post(
     path="/callbacks/{contextId}",
     name="CallbackContext",
-    dependencies=[Depends(get_acs_client)],
 )
 async def post_callback_context(
     contextId: str,
     events: list[dict],
     authorization_header: Annotated[str | None, Header(alias="authorization")] = None,
-    acs_client=Depends(get_acs_client),
 ) -> None:
     """
     Receives callback events for a call from Azure Communication Services.
@@ -91,4 +86,4 @@ async def post_callback_context(
         )
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    await process_callback_event(context_id=contextId, events=events, client=acs_client)
+    await process_callback_event(context_id=contextId, events=events)

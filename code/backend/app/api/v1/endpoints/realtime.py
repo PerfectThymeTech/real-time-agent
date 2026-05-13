@@ -1,10 +1,10 @@
 from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
-from app.calls.process import get_acs_client
 from app.calls.validate import validate_websocket_authorization
 from app.core.settings import settings
 from app.logs import setup_logging
+from app.models.realtime import UserSessionContext
 from app.realtime.communication import CommunicationHandler
 from fastapi import APIRouter, Depends, Header, WebSocket, WebSocketDisconnect
 
@@ -16,7 +16,6 @@ router = APIRouter()
 @router.websocket(
     path="/realtime",
     name="realtime",
-    dependencies=[Depends(get_acs_client)],
 )
 async def realtime(
     websocket: WebSocket,
@@ -24,13 +23,13 @@ async def realtime(
     call_connection_id_header: Annotated[
         str | None, Header(alias="x-ms-call-connection-id")
     ] = None,
-    acs_client=Depends(get_acs_client),
 ) -> Any:
     """
     WebSocket endpoint for real-time communication.
     """
     logger.info(
-        "Received Websocket Connection", extra={"code": "REQUEST_REALTIME_RECEIVED"}
+        f"Received Websocket Connection with call connection ID: {call_connection_id_header}",
+        extra={"code": "REQUEST_REALTIME_RECEIVED"},
     )
 
     # Validate the authorization header to ensure the request is coming from a trusted source
@@ -57,9 +56,16 @@ async def realtime(
     # Accept the WebSocket connection
     await websocket.accept()
 
+    # Create user session context
+    user_session_context = UserSessionContext(
+        call_connection_id=call_connection_id_header,
+    )
+
     async with AsyncExitStack() as stack:
         # Create and init communication handler
-        comm_handler = CommunicationHandler(websocket=websocket)
+        comm_handler = CommunicationHandler(
+            websocket=websocket, user_session_context=user_session_context
+        )
         await comm_handler.init_model_realtime_session()
 
         # Init variable

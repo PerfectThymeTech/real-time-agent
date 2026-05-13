@@ -23,4 +23,4 @@ async def get_heartbeat() -> Any:
     logger.info(
         "Received Heartbeat Request", extra={"code": "REQUEST_HEARTBEAT_RECEIVED"}
     )
-    return HeartbeatResult(isAlive=True)
+    return HeartbeatResult(is_alive=True)
