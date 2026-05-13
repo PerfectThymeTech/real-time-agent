@@ -19,7 +19,7 @@ from azure.eventgrid import EventGridEvent, SystemEventNames
 logger = setup_logging(__name__)
 
 
-def process_incoming_call_event(events: list[dict]) -> ValidationResponse | None:
+async def process_incoming_call_event(events: list[dict]) -> ValidationResponse | None:
     """
     Processes an incoming call event.
 
@@ -72,7 +72,7 @@ def process_incoming_call_event(events: list[dict]) -> ValidationResponse | None
             )
 
             try:
-                answer_call_result = ACS_CLIENT.answer_call(
+                answer_call_result = await ACS_CLIENT.answer_call(
                     incoming_call_context=incoming_call_context,
                     callback_url=callback_events_uri,
                     operation_context="incomingCall",
@@ -148,9 +148,10 @@ async def process_callback_event(context_id: str, events: list[dict]) -> None:
                 )
 
                 # Get call connection properties
-                call_properties = ACS_CLIENT.get_call_connection(
+                call_connection_client = ACS_CLIENT.get_call_connection(
                     call_connection_id=event_data.get("callConnectionId")
-                ).get_call_properties()
+                )
+                call_properties = await call_connection_client.get_call_properties()
                 logger.info(
                     f"MediaStreamingSubscription: {getattr(call_properties, 'media_streaming_subscription', 'N/A')}",
                     extra={

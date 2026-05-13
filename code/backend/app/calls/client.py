@@ -1,6 +1,6 @@
 from app.core.settings import settings
 from app.logs import setup_logging
-from azure.communication.callautomation import (
+from azure.communication.callautomation.aio import (
     CallAutomationClient,
 )
 

@@ -2,7 +2,6 @@ from agents import RunContextWrapper, function_tool
 from app.calls.client import ACS_CLIENT
 from app.logs import setup_logging
 from app.models.realtime import UserSessionContext
-from azure.communication.callautomation import CallConnectionClient
 
 logger = setup_logging(__name__)
 
@@ -42,10 +41,10 @@ async def get_caller_phone_number(ctx: RunContextWrapper[UserSessionContext]) ->
     )
 
     # Get call properties
-    call_connection_client: CallConnectionClient = ACS_CLIENT.get_call_connection(
+    call_connection_client = ACS_CLIENT.get_call_connection(
         call_connection_id=ctx.context.call_connection_id
     )
-    call_properties = call_connection_client.get_call_properties()
+    call_properties = await call_connection_client.get_call_properties()
 
     # Get the caller's phone number from the call properties
     caller_phone_number = call_properties.source_caller_id_number.properties.get(
@@ -71,7 +70,7 @@ async def hang_up_call(ctx: RunContextWrapper[UserSessionContext]) -> None:
     )
 
     # Hang up the call using the ACS client
-    call_connection_client: CallConnectionClient = await ACS_CLIENT.get_call_connection(
+    call_connection_client = ACS_CLIENT.get_call_connection(
         call_connection_id=ctx.context.call_connection_id
     )
     await call_connection_client.hang_up(is_for_everyone=True)
