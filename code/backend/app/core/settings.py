@@ -121,7 +121,7 @@ class Settings(BaseSettings):
             "id": "1_question_and_answer",
             "description": "Answer the customer's questions about Azure products and services based on the information you have and the tools at your disposal.",
             "instructions": [
-                "Immediately call the tool 'get_caller_phone_number' to get the caller's phone number.",
+                "Call the tool 'get_caller_phone_number' only if the caller's phone number is needed for the current workflow and it has not already been obtained during this conversation.",
                 "Answer the customer's questions based on the information you have.",
                 "If the customer asks a question that you cannot answer with the information available and that is directly related to Azure products and services, inform the customer that you cannot answer it.",
                 "If the customer wants to end the call, transition to the state '2_hang_up_call'."
