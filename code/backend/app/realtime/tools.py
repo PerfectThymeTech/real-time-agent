@@ -41,7 +41,7 @@ async def get_caller_phone_number(ctx: RunContextWrapper[UserSessionContext]) ->
     )
 
     # Get call properties
-    call_properties = ACS_CLIENT.get_call_connection(
+    call_properties = await ACS_CLIENT.get_call_connection(
         call_connection_id=ctx.context.call_connection_id
     ).get_call_properties()
 
