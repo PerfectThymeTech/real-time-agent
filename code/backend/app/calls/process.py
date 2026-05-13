@@ -2,10 +2,10 @@ from typing import Any
 from urllib.parse import urlencode
 from uuid import uuid4
 
+from app.calls.client import ACS_CLIENT
 from app.core.settings import settings
 from app.logs import setup_logging
 from app.models.calls import ValidationResponse
-from app.calls.client import ACS_CLIENT
 from azure.communication.callautomation import (
     AudioFormat,
     MediaStreamingAudioChannelType,
@@ -19,9 +19,7 @@ from azure.eventgrid import EventGridEvent, SystemEventNames
 logger = setup_logging(__name__)
 
 
-def process_incoming_call_event(
-    events: list[dict]
-) -> ValidationResponse | None:
+def process_incoming_call_event(events: list[dict]) -> ValidationResponse | None:
     """
     Processes an incoming call event.
 
@@ -121,9 +119,7 @@ def process_incoming_call_event(
             return validation_response
 
 
-async def process_callback_event(
-    context_id: str, events: list[dict]
-) -> None:
+async def process_callback_event(context_id: str, events: list[dict]) -> None:
     """
     Processes a callback event for a call.
 

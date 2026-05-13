@@ -1,12 +1,14 @@
 from agents import RunContextWrapper, function_tool
+from app.calls.client import ACS_CLIENT
 from app.logs import setup_logging
 from app.models.realtime import UserSessionContext
-from app.calls.client import ACS_CLIENT
 
 logger = setup_logging(__name__)
 
 
-def tool_error_handling(ctx: RunContextWrapper[UserSessionContext], error: Exception) -> str:
+def tool_error_handling(
+    ctx: RunContextWrapper[UserSessionContext], error: Exception
+) -> str:
     """Helper function to handle errors in function tools.
 
     :param ctx: The function tool execution context, which includes the user session context.

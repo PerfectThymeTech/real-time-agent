@@ -1,10 +1,11 @@
+from app.core.settings import settings
+from app.logs import setup_logging
 from azure.communication.callautomation import (
     CallAutomationClient,
 )
-from app.core.settings import settings
-from app.logs import setup_logging
 
 logger = setup_logging(__name__)
+
 
 def get_acs_client() -> CallAutomationClient:
     """
