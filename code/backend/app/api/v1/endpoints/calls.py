@@ -52,7 +52,7 @@ async def post_incoming_call(
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     # Process the incoming call event and determine if the call should be accepted or rejected
-    result = process_incoming_call_event(events=events)
+    result = await process_incoming_call_event(events=events)
 
     if result:
         return result
