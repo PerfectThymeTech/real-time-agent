@@ -30,6 +30,11 @@ class CommunicationHandler:
     def __init__(self, websocket: WebSocket, user_session_context: UserSessionContext):
         """
         Initialize the communication handler.
+
+        :param websocket: The WebSocket connection to the client.
+        :type websocket: WebSocket
+        :param user_session_context: The user session context containing information about the user's session.
+        :type user_session_context: UserSessionContext
         """
         self.websocket = websocket
         self.context = RunContextWrapper(user_session_context)
@@ -87,7 +92,7 @@ class CommunicationHandler:
             extra={"code": "INIT_MODEL_REALTIME_SESSION_START"},
         )
         session_context = await real_time_runner.run(
-            context=self.context,
+            context=self.context.context,
             model_config=real_time_model_config,
         )
         session = await session_context.__aenter__()
@@ -150,6 +155,9 @@ class CommunicationHandler:
     async def send_audio(self, audio: bytes):
         """
         Send audio data to the real time model session.
+
+        :param audio: The audio data to send to the model session.
+        :type audio: bytes
         """
         logger.debug(
             "Sending audio data to model session",
@@ -215,6 +223,9 @@ class CommunicationHandler:
     async def return_audio(self, audio: bytes):
         """
         Return audio data to the client over the WebSocket.
+
+        :param audio: The audio data to return to the client.
+        :type audio: bytes
         """
         logger.debug(
             "Audio received from the model, sending to ACS client over WebSocket",
