@@ -2,6 +2,7 @@ from agents import RunContextWrapper, function_tool
 from app.calls.client import ACS_CLIENT
 from app.logs import setup_logging
 from app.models.realtime import UserSessionContext
+from azure.communication.callautomation import CallConnectionClient
 
 logger = setup_logging(__name__)
 
@@ -19,7 +20,7 @@ def tool_error_handling(
     :rtype: str
     """
     logger.error(
-        "Error in function tool",
+        f"Error in function tool: {str(error)}",
         extra={
             "code": "FUNCTION_TOOL_ERROR",
             "error_message": str(error),
@@ -41,13 +42,21 @@ async def get_caller_phone_number(ctx: RunContextWrapper[UserSessionContext]) ->
     )
 
     # Get call properties
-    call_properties = await ACS_CLIENT.get_call_connection(
+    call_connection_client: CallConnectionClient = ACS_CLIENT.get_call_connection(
         call_connection_id=ctx.context.call_connection_id
-    ).get_call_properties()
+    )
+    call_properties = call_connection_client.get_call_properties()
 
     # Get the caller's phone number from the call properties
     caller_phone_number = call_properties.source_caller_id_number.properties.get(
         "value", "unknown"
+    )
+    logger.info(
+        f"Retrieved caller phone number: {caller_phone_number}",
+        extra={
+            "code": "FUNCTION_TOOL_GET_CALLER_PHONE_NUMBER_RETRIEVED",
+            "caller_phone_number": caller_phone_number,
+        },
     )
 
     return caller_phone_number
@@ -62,6 +71,11 @@ async def hang_up_call(ctx: RunContextWrapper[UserSessionContext]) -> None:
     )
 
     # Hang up the call using the ACS client
-    await ACS_CLIENT.get_call_connection(
+    call_connection_client: CallConnectionClient = await ACS_CLIENT.get_call_connection(
         call_connection_id=ctx.context.call_connection_id
-    ).hang_up(is_for_everyone=True)
+    )
+    await call_connection_client.hang_up(is_for_everyone=True)
+    logger.info(
+        "Call hung up successfully",
+        extra={"code": "FUNCTION_TOOL_HANG_UP_CALL_SUCCESS"},
+    )
