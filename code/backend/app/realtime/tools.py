@@ -49,29 +49,18 @@ async def get_caller_phone_number(ctx: RunContextWrapper[UserSessionContext]) ->
     call_properties = await call_connection_client.get_call_properties()
 
     # Generate dict of call properties for logging
-    call_properties_dict = json.dumps(call_properties, default=lambda o: o.__dict__)
-
-    logger.info(
-        f"Retrieved call properties: {call_properties_dict}",
+    logger.debug(
+        f"Retrieved call properties: {json.dumps(call_properties, default=lambda o: o.__dict__)}",
         extra={
             "code": "FUNCTION_TOOL_GET_CALLER_PHONE_NUMBER_CALL_PROPERTIES_RETRIEVED",
         },
     )
 
     # Get the caller's phone number from the call properties
-    caller_phone_number = "unknown"
-    try:
-        caller_phone_number = call_properties.source_caller_id_number.properties.get(
-            "value", "unknown"
-        )
-    except Exception as e:
-        logger.error(
-            f"Error retrieving caller phone number: {str(e)}",
-            extra={
-                "code": "FUNCTION_TOOL_GET_CALLER_PHONE_NUMBER_RETRIEVAL_ERROR",
-                "error_message": str(e),
-            },
-        )
+    caller_phone_number = call_properties.source_display_name
+    if not caller_phone_number:
+        caller_phone_number = "unknown"
+
     logger.info(
         f"Retrieved caller phone number: {caller_phone_number}",
         extra={
