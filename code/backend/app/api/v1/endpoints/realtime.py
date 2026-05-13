@@ -29,7 +29,7 @@ async def realtime(
     """
     logger.info(
         f"Received Websocket Connection with call connection ID: {call_connection_id_header}",
-        extra={"code": "REQUEST_REALTIME_RECEIVED"}
+        extra={"code": "REQUEST_REALTIME_RECEIVED"},
     )
 
     # Validate the authorization header to ensure the request is coming from a trusted source
