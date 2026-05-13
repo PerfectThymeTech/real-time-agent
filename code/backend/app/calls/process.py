@@ -5,9 +5,9 @@ from uuid import uuid4
 from app.core.settings import settings
 from app.logs import setup_logging
 from app.models.calls import ValidationResponse
+from app.calls.client import ACS_CLIENT
 from azure.communication.callautomation import (
     AudioFormat,
-    CallAutomationClient,
     MediaStreamingAudioChannelType,
     MediaStreamingContentType,
     MediaStreamingOptions,
@@ -19,21 +19,16 @@ from azure.eventgrid import EventGridEvent, SystemEventNames
 logger = setup_logging(__name__)
 
 
-def get_acs_client() -> CallAutomationClient:
-    """
-    Returns a CallAutomationClient to answer phone calls received from Azure Communication Services.
-    """
-    client = CallAutomationClient.from_connection_string(
-        conn_str=settings.ACS_CONNECTION_STRING
-    )
-    return client
-
-
 def process_incoming_call_event(
-    events: list[dict], client: CallAutomationClient
-) -> Any:
+    events: list[dict]
+) -> ValidationResponse | None:
     """
     Processes an incoming call event.
+
+    :param events: A list of event dictionaries received from Azure Event Grid.
+    :type events: list[dict]
+    :return: A ValidationResponse if the event is a subscription validation event, otherwise None.
+    :rtype: ValidationResponse | None
     """
     # Set callback base url
     callback_events_uri_base = f"https://{settings.APP_BASE_URL}/v1/calls/callbacks"
@@ -79,7 +74,7 @@ def process_incoming_call_event(
             )
 
             try:
-                answer_call_result = client.answer_call(
+                answer_call_result = ACS_CLIENT.answer_call(
                     incoming_call_context=incoming_call_context,
                     callback_url=callback_events_uri,
                     operation_context="incomingCall",
@@ -127,10 +122,17 @@ def process_incoming_call_event(
 
 
 async def process_callback_event(
-    context_id: str, events: list[dict], client: CallAutomationClient
+    context_id: str, events: list[dict]
 ) -> None:
     """
     Processes a callback event for a call.
+
+    :param context_id: The context ID for the call, used for logging and tracing.
+    :type context_id: str
+    :param events: A list of event dictionaries received from Azure Event Grid.
+    :type events: list[dict]
+    :return: None
+    :rtype: None
     """
     for event in events:
         # Get event data
@@ -150,7 +152,7 @@ async def process_callback_event(
                 )
 
                 # Get call connection properties
-                call_properties = client.get_call_connection(
+                call_properties = ACS_CLIENT.get_call_connection(
                     call_connection_id=event_data.get("callConnectionId")
                 ).get_call_properties()
                 logger.info(

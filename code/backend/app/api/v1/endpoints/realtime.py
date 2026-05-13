@@ -1,7 +1,6 @@
 from contextlib import AsyncExitStack
 from typing import Annotated, Any
 
-from app.calls.process import get_acs_client
 from app.calls.validate import validate_websocket_authorization
 from app.core.settings import settings
 from app.logs import setup_logging
@@ -17,7 +16,6 @@ router = APIRouter()
 @router.websocket(
     path="/realtime",
     name="realtime",
-    dependencies=[Depends(get_acs_client)],
 )
 async def realtime(
     websocket: WebSocket,
@@ -25,7 +23,6 @@ async def realtime(
     call_connection_id_header: Annotated[
         str | None, Header(alias="x-ms-call-connection-id")
     ] = None,
-    acs_client=Depends(get_acs_client),
 ) -> Any:
     """
     WebSocket endpoint for real-time communication.
@@ -57,7 +54,6 @@ async def realtime(
 
     # Create user session context
     user_session_context = UserSessionContext(
-        acs_client=acs_client,
         call_connection_id=call_connection_id_header,
     )
 
