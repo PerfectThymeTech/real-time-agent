@@ -1,3 +1,5 @@
+import json
+
 from agents import RunContextWrapper, function_tool
 from app.calls.client import ACS_CLIENT
 from app.logs import setup_logging
@@ -47,14 +49,13 @@ async def get_caller_phone_number(ctx: RunContextWrapper[UserSessionContext]) ->
     call_properties = await call_connection_client.get_call_properties()
 
     # Generate dict of call properties for logging
-    call_properties_dict = call_properties.__dict__() if call_properties else {}
+    call_properties_dict = json.dumps(call_properties, default=lambda o: o.__dict__)
 
     logger.info(
         f"Retrieved call properties: {call_properties_dict}",
         extra={
             "code": "FUNCTION_TOOL_GET_CALLER_PHONE_NUMBER_CALL_PROPERTIES_RETRIEVED",
-        }
-        | call_properties_dict,
+        },
     )
 
     # Get the caller's phone number from the call properties

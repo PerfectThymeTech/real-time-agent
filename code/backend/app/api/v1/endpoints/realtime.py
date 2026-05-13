@@ -57,7 +57,6 @@ async def realtime(
     await websocket.accept()
 
     # Create user session context
-    call_connection_id_header = websocket.headers.get("x-ms-call-connection-id")
     user_session_context = UserSessionContext(
         call_connection_id=call_connection_id_header,
     )
