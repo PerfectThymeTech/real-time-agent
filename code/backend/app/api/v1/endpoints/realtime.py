@@ -28,7 +28,8 @@ async def realtime(
     WebSocket endpoint for real-time communication.
     """
     logger.info(
-        "Received Websocket Connection", extra={"code": "REQUEST_REALTIME_RECEIVED"}
+        f"Received Websocket Connection with call connection ID: {call_connection_id_header}",
+        extra={"code": "REQUEST_REALTIME_RECEIVED"}
     )
 
     # Validate the authorization header to ensure the request is coming from a trusted source
@@ -52,13 +53,14 @@ async def realtime(
         await websocket.close(code=1008, reason="Missing call connection ID header")
         return
 
+    # Accept the WebSocket connection
+    await websocket.accept()
+
     # Create user session context
+    call_connection_id_header = websocket.headers.get("x-ms-call-connection-id")
     user_session_context = UserSessionContext(
         call_connection_id=call_connection_id_header,
     )
-
-    # Accept the WebSocket connection
-    await websocket.accept()
 
     async with AsyncExitStack() as stack:
         # Create and init communication handler
