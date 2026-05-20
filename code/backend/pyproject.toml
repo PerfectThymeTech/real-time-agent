@@ -15,7 +15,7 @@ dependencies = [
     "opentelemetry-instrumentation-openai-agents==0.60.0",
     "opentelemetry-instrumentation-system-metrics==0.60b0",
     "pydantic-settings==2.14.1",
-    "pyjwt==2.10.1",
+    "pyjwt==2.12.1",
 ]
 
 [dependency-groups]
