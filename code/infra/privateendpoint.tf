@@ -13,14 +13,11 @@ resource "azurerm_private_endpoint" "private_endpoint" {
     subresource_names              = ["account"]
   }
   subnet_id = azapi_resource.subnet_private_endpoints.id
-  dynamic "private_dns_zone_group" {
-    for_each = var.private_dns_zone_id_open_ai == "" ? [] : [1]
-    content {
-      name = "${local.prefix}-oai-tst-arecord"
-      private_dns_zone_ids = [
-        var.private_dns_zone_id_open_ai
-      ]
-    }
+  private_dns_zone_group {
+    name = "${local.prefix}-oai-tst-arecord"
+    private_dns_zone_ids = [
+      var.private_dns_zone_id_open_ai
+    ]
   }
 
   lifecycle {
