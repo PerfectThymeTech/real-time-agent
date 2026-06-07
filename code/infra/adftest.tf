@@ -49,24 +49,26 @@ resource "azurerm_data_factory_integration_runtime_azure" "data_factory_integrat
   virtual_network_enabled = true
 }
 
-resource "azapi_update_resource" "data_factory_integration_runtime_azure_update" {
+resource "azapi_update_resource" "data_factory_integration_runtime_azure_update_1" {
   type        = "Microsoft.DataFactory/factories/integrationRuntimes@2018-06-01"
   resource_id = azurerm_data_factory_integration_runtime_azure.data_factory_integration_runtime_azure.id
 
   body = {
     properties = {
-      computeProperties = {
-        copyComputeScaleProperties = {
-          dataIntegrationUnit = 64
-          timeToLive          = 30
-        }
-        # maxParallelExecutionsPerNode = 1
-        # nodeSize = "string"
-        # numberOfNodes = 2
-        pipelineExternalComputeScaleProperties = {
-          numberOfExternalNodes = 2
-          numberOfPipelineNodes = 2
-          timeToLive            = 30
+      typeProperties = {
+        computeProperties = {
+          copyComputeScaleProperties = {
+            dataIntegrationUnit = 64
+            timeToLive          = 30
+          }
+          # maxParallelExecutionsPerNode = 1
+          # nodeSize = "string"
+          # numberOfNodes = 2
+          pipelineExternalComputeScaleProperties = {
+            numberOfExternalNodes = 2
+            numberOfPipelineNodes = 2
+            timeToLive            = 30
+          }
         }
       }
     }
