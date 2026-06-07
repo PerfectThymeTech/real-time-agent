@@ -1,6 +1,6 @@
 resource "azurerm_private_endpoint" "private_endpoint" {
   name                = "${local.prefix}-oai-tst-pe"
-  resource_group_name = azurerm_resource_group.resource_group_app.name
+  resource_group_name = azurerm_resource_group.resource_group.name
   location            = var.location
   tags                = var.tags
 
