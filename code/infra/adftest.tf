@@ -85,19 +85,18 @@ resource "azapi_resource" "data_factory_linked_service_azure_function" {
     properties = {
       annotations = []
       description = "Linked Service for Azure Function used in Terraform testing"
+      connectVia = {
+        referenceName = azurerm_data_factory_integration_runtime_azure.data_factory_integration_runtime_azure.name
+        type          = "IntegrationRuntimeReference"
+      }
       type        = "AzureFunction"
       typeProperties = {
         functionAppUrl = "https://myfunctionapp.azurewebsites.net/"
         authentication = "MSI"
         resourceId     = "api:847393e5-9c8b-4c83-9a1c-8d0b1e7cbbf2"
-        key            = "foo"
         functionKey = {
           type  = "SecureString"
           value = "foo"
-        }
-        connectVia = {
-          referenceName = azurerm_data_factory_integration_runtime_azure.data_factory_integration_runtime_azure.name
-          type          = "IntegrationRuntimeReference"
         }
       }
     }
